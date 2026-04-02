@@ -1,0 +1,114 @@
+:root {
+    --midnight-violet: #242038;
+    --reddish-brown: #98473e;
+    --silver: #c4b1ae;
+    --tropical-teal: #64b6ac;
+    --cerulean: #006e90;
+}
+
+/* BODY */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--midnight-violet);
+    margin: 0;
+    padding: 20px;
+    color: white;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #2e2a47;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+/* HEADINGS */
+h2 {
+    color: var(--tropical-teal);
+    margin-bottom: 15px;
+}
+
+/* FORM */
+form {
+    margin-bottom: 20px;
+}
+
+/* INPUT */
+input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--silver);
+    background-color: #1f1b33;
+    color: white;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--tropical-teal);
+}
+
+/* BUTTON */
+button {
+    padding: 10px 15px;
+    background-color: var(--cerulean);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: var(--tropical-teal);
+}
+
+/* CARD CONTAINER */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* CARD */
+.card {
+    background: #1f1b33;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid var(--silver);
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* HOVER EFFECT */
+.card:hover {
+    transform: translateY(-5px);
+    border-color: var(--tropical-teal);
+    box-shadow: 0 8px 20px rgba(100, 182, 172, 0.3);
+}
+
+/* CARD TEXT */
+.card h3 {
+    color: var(--tropical-teal);
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin: 5px 0;
+    color: var(--silver);
+}
+
+.card span {
+    color: white;
+}
+
+
+/* NO DATA */
+.no-data {
+    color: var(--silver);
+    margin-top: 10px;
+}
+

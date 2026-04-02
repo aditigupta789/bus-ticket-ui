@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <title>Agency Customers</title>
+</head>
+<body>
+
+<h2>Fetch Customers by Agency</h2>
+
+<!-- FORM -->
+<form action="/agency/customers" method="get">
+    <label>Enter Agency ID:</label>
+    <input type="number" name="agencyId" placeholder="Enter Agency ID" required />
+    <button type="submit">Get Customers</button>
+</form>
+
+<hr>
+
+<!-- Card -->
+<div class="card-container">
+
+    <div class="card" th:each="c : ${customers}">
+        <h3 th:text="${c.name}"></h3>
+        <p><strong>ID:</strong> <span th:text="${c.customerId}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${c.email}"></span></p>
+        <p><strong>Phone:</strong> <span th:text="${c.phone}"></span></p>
+    </div>
+
+</div>
+
+<p class="no-data" th:if="${customers == null}">
+    No data loaded yet. Enter Agency ID above.
+</p>
+
+</body>
+</html>
