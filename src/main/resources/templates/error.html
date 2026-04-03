@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Error — Bus Ticket UI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        :root {
+            --evergreen:   #002626;
+            --dark-teal:   #0e4749;
+            --lime-cream:  #d6f599;
+            --cayenne-red: #e55812;
+            --soft-linen:  #efe7da;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--soft-linen);
+            background-image:
+                    radial-gradient(ellipse at 10% 0%,   rgba(14,71,73,0.18)  0%, transparent 55%),
+                    radial-gradient(ellipse at 90% 100%,  rgba(0,38,38,0.22)   0%, transparent 55%),
+                    radial-gradient(ellipse at 80% 10%,   rgba(229,88,18,0.10) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            background: var(--evergreen);
+            padding: 0 2rem;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+        .topbar-logo { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--lime-cream); letter-spacing: 0.5px; }
+        .topbar-divider { width: 1px; height: 20px; background: rgba(214,245,153,0.25); }
+        .topbar-sub { font-size: 0.78rem; color: rgba(214,245,153,0.55); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* ── MAIN ── */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+
+        /* ── ERROR CARD ── */
+        .error-card {
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(14,71,73,0.14);
+            border-radius: 24px;
+            box-shadow: 0 2px 0 rgba(14,71,73,0.06), 0 20px 60px rgba(0,38,38,0.12);
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .card-accent-error {
+            height: 5px;
+            background: linear-gradient(90deg, var(--cayenne-red), #f09060);
+        }
+        .card-body-inner { padding: 2.5rem 2.5rem 2rem; }
+
+        .error-emoji { font-size: 2.8rem; margin-bottom: 1rem; }
+
+        .error-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.6rem;
+            color: var(--cayenne-red);
+            margin-bottom: 0.8rem;
+        }
+
+        /* The message box — clean, no raw JSON ever shown here
+           because GlobalExceptionHandler already sanitises it */
+        .error-message-box {
+            background: rgba(229,88,18,0.07);
+            border: 1px solid rgba(229,88,18,0.20);
+            border-left: 4px solid var(--cayenne-red);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            font-size: 0.875rem;
+            color: #6b2000;
+            margin-bottom: 1.6rem;
+            text-align: left;
+            word-break: break-word;
+        }
+
+        .error-hint {
+            font-size: 0.875rem;
+            color: rgba(14,71,73,0.60);
+            margin-bottom: 1.8rem;
+        }
+
+        /* ── BACK BUTTON ── */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.78rem 1.6rem;
+            background: linear-gradient(135deg, var(--evergreen), var(--dark-teal));
+            color: var(--lime-cream);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 13px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: filter 0.15s, box-shadow 0.15s;
+        }
+        .btn-back:hover { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(0,38,38,0.18); color: var(--lime-cream); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<header class="topbar">
+    <span class="topbar-logo">🚌 BusTicket</span>
+    <span class="topbar-divider"></span>
+    <span class="topbar-sub">Agency Office</span>
+</header>
+
+<!-- ── MAIN ── -->
+<main>
+    <div class="error-card">
+        <div class="card-accent-error"></div>
+        <div class="card-body-inner">
+
+            <div class="error-emoji">⚠️</div>
+
+            <h1 class="error-title">Something went wrong</h1>
+
+            <!-- Safe, sanitised message from GlobalExceptionHandler — never raw JSON -->
+            <div th:if="${error}" class="error-message-box" th:text="${error}"></div>
+
+            <p class="error-hint">Please try again or return to the main page.</p>
+
+            <a class="btn-back" th:href="@{/agency-office}">← Go Back</a>
+
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

@@ -305,3 +305,24 @@ th {
 tbody tr:hover {
   background: rgba(239, 231, 218, 0.6);
 }
+:root {
+    /* Color palette (reference) */
+    --evergreen: #002626ff;
+    --dark-teal: #0e4749ff;
+    --lime-cream: #d6f599ff;
+    --cayenne-red: #e55812ff;
+    --soft-linen: #efe7daff;
+
+    /* Background gradient (reference) */
+    --gradient-radial: radial-gradient(#002626ff, #0e4749ff, #d6f599ff, #e55812ff, #efe7daff);
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--gradient-radial);
+    color: #002626;
+}
