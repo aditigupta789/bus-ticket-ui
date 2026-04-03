@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<!--
+    Page: Trips Dashboard
+    Purpose: Entry point for trip-related operations (search trips and check seat availability)
+    Data Source: User input (forms) + session data (username)
+
+    Features:
+      - Reusable layout using navbar and footer fragments
+      - Displays logged-in user from session
+      - Provides two main actions:
+          1. Fetch available seats using tripId
+          2. Search trips using source and destination
+
+    Flow:
+      - User enters input → submits form → redirected to results page (/trip/seats or /trip/search)
+-->
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">

@@ -1,4 +1,19 @@
-/* Team palette — keep in sync with other modules */
+/*
+    File: style.css
+    Purpose: Global styling for Trip module UI (dashboard, search, results, seats)
+
+    Used In:
+      - Navbar (fragments/navbar)
+      - Dashboard page
+      - Search results page
+      - Seats page
+
+    Design System:
+      - Theme: Blue-white gradient with glassmorphism cards
+      - Layout: Responsive grid + card-based UI
+      - Components: Navbar, cards, forms, tables, key-value lists
+*/
+
 :root {
   --evergreen: #002626;
   --dark-teal: #0e4749;

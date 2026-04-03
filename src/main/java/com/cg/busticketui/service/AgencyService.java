@@ -14,16 +14,53 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * AgencyService handles business logic related to agency operations,
+ * particularly fetching customers associated with a specific agency.
+ *
+ * <p>
+ * This service communicates with a backend API using {@link RestTemplate}
+ * and applies role-based authorization via HTTP headers.
+ * </p>
+ */
 @Service
 public class AgencyService {
     private final RestTemplate restTemplate;
 
+    /**
+     * Default constructor initializing RestTemplate.
+     */
     public AgencyService() {
         restTemplate = new RestTemplate();
     }
 
+    /**
+     * Base URL for backend API endpoints.
+     */
     private final String BASE_URL = "http://localhost:8082/api";
 
+    /**
+     * Retrieves a list of customers associated with a given agency ID.
+     *
+     * <p>
+     * Sends a GET request to the backend service with role-based headers.
+     * If the user has the "AGENCY" role, the agencyId is also included
+     * in the headers for access restriction.
+     * </p>
+     *
+     * <p>
+     * Handles various HTTP exceptions and converts them into
+     * application-specific exceptions.
+     * </p>
+     *
+     * @param agencyId the ID of the agency
+     * @param session  the HTTP session containing user role information
+     *
+     * @return a list of {@link CustomerResponseDto} representing customers
+     *
+     * @throws ResourceNotFoundException if the agency does not exist
+     * @throws RuntimeException          if access is denied or any other error occurs
+     */
     public List<CustomerResponseDto> getCustomersByAgencyId(Integer agencyId, HttpSession session) {
 
         String url = BASE_URL + "/agency/" + agencyId + "/customers";

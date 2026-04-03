@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<!--
+    Page: Available Seats
+    Purpose: Displays seat availability details for a selected trip
+    Data Source: Backend via Thymeleaf (seats map, seatsError, tripId)
+
+    Features:
+      - Reusable layout using navbar and footer fragments
+      - Displays trip context (tripId)
+      - Handles dynamic seat data with flexible key formats (camelCase & snake_case)
+
+    States:
+      - Error (trip not found / backend issue)
+      - Results (seat details shown as key-value pairs)
+      - Empty (no seat information available)
+-->
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">

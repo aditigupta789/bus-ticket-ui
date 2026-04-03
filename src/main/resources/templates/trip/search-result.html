@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<!--
+    Page: Trip Search Results
+    Purpose: Displays available trips between selected source and destination
+    Data Source: Backend via Thymeleaf (trips list, tripsError, source, destination)
+
+    Features:
+      - Reusable layout using navbar and footer fragments
+      - Displays search context (source → destination)
+      - Handles dynamic trip data (supports multiple key formats like camelCase & snake_case)
+
+    States:
+      - Error (backend/API failure)
+      - Results (list of trips in table format)
+      - Empty (no trips found)
+-->
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">

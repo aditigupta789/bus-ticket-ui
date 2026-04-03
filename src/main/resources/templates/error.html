@@ -1,4 +1,18 @@
 <!doctype html>
+<!--
+    Page: Error Page
+    Purpose: Displays user-friendly error messages for unexpected failures
+    Data Source: GlobalExceptionHandler (error message passed via Thymeleaf)
+
+    Features:
+      - Shows sanitized error message (no raw backend/JSON exposure)
+      - Provides consistent UI for all application errors
+      - Includes navigation back to main page
+
+    Flow:
+      - Exception occurs → GlobalExceptionHandler → error.html rendered
+-->
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>

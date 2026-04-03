@@ -1,4 +1,24 @@
 <!DOCTYPE html>
+<!--
+    Page: Agency Customers
+    Purpose: Fetch and display customers associated with a specific agency
+    Data Source: Backend via Thymeleaf (customers list, error)
+
+    Features:
+      - Input form to enter agencyId
+      - Displays customer details in card format
+      - Handles error messages from backend
+
+    States:
+      - Initial (no data loaded)
+      - Results (customers displayed)
+      - Empty (no customers found)
+      - Error (invalid agency / backend issue)
+
+    Flow:
+      - User enters agencyId → /agency/customers → customers displayed
+-->
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/customers.css?v=2}">

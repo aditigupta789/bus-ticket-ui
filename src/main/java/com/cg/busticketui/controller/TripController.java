@@ -11,6 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TripController handles web requests related to trip operations,
+ * including trip search and seat availability.
+ *
+ * <p>
+ * This controller interacts with the TripUiService to fetch trip-related data
+ * and prepares the model for rendering Thymeleaf views.
+ * </p>
+ *
+ * <p>
+ * All endpoints are prefixed with "/trip".
+ * </p>
+ */
 @Controller
 @RequestMapping("/trip")
 @RequiredArgsConstructor
@@ -18,11 +31,30 @@ public class TripController {
 
     private final TripUiService tripUiService;
 
+    /**
+     * Loads the trip dashboard page.
+     *
+     * @param model the model used to pass data to the view
+     * @return the trip dashboard view ("trip/trip-list")
+     */
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         return "trip/trip-list";
     }
 
+    /**
+     * Fetches available seats for a given trip.
+     *
+     * <p>
+     * Retrieves seat availability using the trip ID and handles
+     * both specific and generic exceptions gracefully.
+     * </p>
+     *
+     * @param tripId the ID of the trip
+     * @param model  the model used to pass seat data or error messages
+     *
+     * @return the seat result view ("trip/seats-result")
+     */
     @GetMapping("/seats")
     public String getSeats(
             @RequestParam(name = "tripId") Integer tripId,
@@ -44,6 +76,22 @@ public class TripController {
 
         return "trip/seats-result";
     }
+
+    /**
+     * Searches for trips based on source and destination.
+     *
+     * <p>
+     * Retrieves matching trips from the service layer and handles
+     * any potential errors by returning an empty result set with
+     * an error message.
+     * </p>
+     *
+     * @param source      the source location
+     * @param destination the destination location
+     * @param model       the model used to pass trip data or error messages
+     *
+     * @return the trip search result view ("trip/search-result")
+     */
 
     @GetMapping("/search")
     public String searchTrips(

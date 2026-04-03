@@ -1,5 +1,18 @@
-
 <!DOCTYPE html>
+<!--
+    Page: Login
+    Purpose: Authenticates user and starts session
+    Data Source: User input (username, password) + backend response (error message)
+
+    Features:
+      - Login form with username and password
+      - Sends POST request to /login
+      - Displays error message for invalid credentials
+
+    Flow:
+      - User enters credentials → /login → AuthService → redirect based on role
+-->
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/css/customers.css?v=2}">

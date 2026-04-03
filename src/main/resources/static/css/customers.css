@@ -1,3 +1,14 @@
+/*
+    File: customers.css
+    Purpose: Styling for customer-related pages (login, customer dashboard, agency customers)
+    Used In: Customer UI, Agency UI, Login page
+
+    Design System:
+      - Colors: bubblegum pink, golden pollen, antique white, blue green, dark teal
+      - Layout: cards, forms, containers
+      - Components: customer cards, booking cards, form UI
+*/
+
 :root {
     --bubblegum-pink: #EF476F;
     --golden-pollen: #FFD470;

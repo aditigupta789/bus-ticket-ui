@@ -1,3 +1,14 @@
+<!--
+    Fragment: Navbar
+    Purpose: Reusable navigation bar displayed across pages
+    Usage: Included using Thymeleaf (th:replace / th:insert)
+
+    Features:
+      - Displays application branding (home/dashboard link)
+      - Shows logged-in user from session
+      - Provides logout functionality
+-->
+
 <nav xmlns:th="http://www.thymeleaf.org" th:fragment="navbar" class="nav-outer">
     <div class="container nav">
         <a class="brand" th:href="@{/trip/dashboard}">BusTicket Booking</a>

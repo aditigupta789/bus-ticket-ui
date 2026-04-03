@@ -1,3 +1,13 @@
+/*
+    File: route.css
+    Purpose: Styling for route-related pages (route search, popular routes, search results)
+    Used In: Route Finder UI
+
+    Design System:
+      - Colors: primary, secondary, accent
+      - Layout: centered container, cards, form inputs
+*/
+
 :root {
     --primary: #1f3c88;
     --secondary: #5893d4;
