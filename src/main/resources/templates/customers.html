@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <link rel="stylesheet" th:href="@{/css/customers.css?v=2}">
     <title>Agency Customers</title>
 </head>
 <body>
@@ -9,11 +9,13 @@
 <h2>Fetch Customers by Agency</h2>
 
 <!-- FORM -->
-<form action="/agency/customers" method="get">
-    <label>Enter Agency ID:</label>
-    <input type="number" name="agencyId" placeholder="Enter Agency ID" required />
-    <button type="submit">Get Customers</button>
-</form>
+<div class="container">
+    <form action="/agency/customers" method="get">
+        <label>Enter Agency ID:</label>
+        <input type="number" name="agencyId" placeholder="Enter Agency ID" required />
+        <button type="submit">Get Customers</button>
+    </form>
+</div>
 
 <hr>
 

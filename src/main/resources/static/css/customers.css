@@ -1,68 +1,92 @@
 :root {
-    --midnight-violet: #242038;
-    --reddish-brown: #98473e;
-    --silver: #c4b1ae;
-    --tropical-teal: #64b6ac;
-    --cerulean: #006e90;
+    --bubblegum-pink: #EF476F;
+    --golden-pollen: #FFD470;
+    --antique-white: #FFEEDD;
+    --blue-green: #139FCD;
+    --midnight-violet: #1f1b33;
+    --dark-teal: #073B4C;
 }
 
 /* BODY */
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: var(--midnight-violet);
+    background-color: var(--antique-white);
     margin: 0;
     padding: 20px;
-    color: white;
+    color: var(--dark-teal);
 }
 
 /* CONTAINER */
 .container {
-    max-width: 900px;
+    max-width: 400px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     margin: auto;
-    background: #2e2a47;
-    padding: 25px;
+    background: var(--dark-teal);
+    padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    color: var(--blue-green);
+    box-shadow: 0px 6px 12px var(--midnight-violet);
 }
 
 /* HEADINGS */
 h2 {
-    color: var(--tropical-teal);
+    color: var(--dark-teal);
     margin-bottom: 15px;
 }
 
 /* FORM */
 form {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+label{
+    margin-bottom: 7px;
+    font-weight: bold;
 }
 
 /* INPUT */
 input {
+    max-width: 50%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid var(--silver);
-    background-color: #1f1b33;
-    color: white;
+    border: 1px solid var(--blue-green);
+    background-color: var(--antique-white);
+    color: var(--blue-green);
     outline: none;
+    margin-bottom: 7px;
+    transition: 0.2s ease-in-out;
 }
 
 input:focus {
-    border-color: var(--tropical-teal);
+    border-color: var(--bubblegum-pink);
+}
+
+input:hover{
+    scale:1.02;
 }
 
 /* BUTTON */
 button {
     padding: 10px 15px;
-    background-color: var(--cerulean);
-    color: white;
+    max-width: 40%;
+    background-color: var(--blue-green);
+    color: var(--golden-pollen);
     border: none;
     border-radius: 6px;
     cursor: pointer;
     transition: 0.3s;
+    font-weight: bold;
 }
 
 button:hover {
-    background-color: var(--tropical-teal);
+    background-color: var(--bubblegum-pink);
+    color: var(--golden-pollen);
+    scale: 1.01;
 }
 
 /* CARD CONTAINER */
@@ -75,40 +99,40 @@ button:hover {
 
 /* CARD */
 .card {
-    background: #1f1b33;
+    background: var(--midnight-violet);
     border-radius: 12px;
     padding: 15px;
-    border: 1px solid var(--silver);
+    border: 1px solid var(--dark-teal);
     transition: 0.3s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 20px var(--dark-teal);
 }
 
 /* HOVER EFFECT */
 .card:hover {
     transform: translateY(-5px);
-    border-color: var(--tropical-teal);
-    box-shadow: 0 8px 20px rgba(100, 182, 172, 0.3);
+    border-color: var(--bubblegum-pink);
+    box-shadow: 0 8px 20px var(--dark-teal);
 }
 
 /* CARD TEXT */
 .card h3 {
-    color: var(--tropical-teal);
+    color: var(--golden-pollen);
     margin-bottom: 10px;
 }
 
 .card p {
     margin: 5px 0;
-    color: var(--silver);
+    color: var(--bubblegum-pink);
 }
 
 .card span {
-    color: white;
+    color: var(--golden-pollen);
 }
 
 
 /* NO DATA */
 .no-data {
-    color: var(--silver);
+    color: var(--dark-teal);
     margin-top: 10px;
 }
 
