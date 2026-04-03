@@ -5,16 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Office Drivers — Bus Ticket UI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        /* ── DESIGN TOKENS (identical across all pages) ── */
+        /* ═══════════════════════════════════════════
+           DESIGN TOKENS (shared across all pages)
+        ═══════════════════════════════════════════ */
         :root {
-            --evergreen:   #002626;
-            --dark-teal:   #0e4749;
-            --lime-cream:  #d6f599;
-            --cayenne-red: #e55812;
-            --soft-linen:  #efe7da;
+            --evergreen:      #002626;
+            --dark-teal:      #0e4749;
+            --lime-cream:     #d6f599;
+            --cayenne-red:    #e55812;
+            --soft-linen:     #efe7da;
+            --white-glass:    rgba(255, 255, 255, 0.78);
+            --border-subtle:  rgba(14, 71, 73, 0.13);
+            --shadow-card:    0 1px 3px rgba(0,38,38,0.06),
+            0 8px 24px rgba(0,38,38,0.10),
+            0 32px 64px rgba(0,38,38,0.08);
+            --radius-card:    20px;
+            --radius-btn:     10px;
+            --transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,189 +34,408 @@
             font-family: 'DM Sans', sans-serif;
             background-color: var(--soft-linen);
             background-image:
-                    radial-gradient(ellipse at 10% 0%,   rgba(14,71,73,0.18)  0%, transparent 55%),
-                    radial-gradient(ellipse at 90% 100%,  rgba(0,38,38,0.22)   0%, transparent 55%),
-                    radial-gradient(ellipse at 80% 10%,   rgba(229,88,18,0.10) 0%, transparent 40%);
+                    radial-gradient(ellipse 80% 50% at 15% -5%,  rgba(14,71,73,0.16)  0%, transparent 60%),
+                    radial-gradient(ellipse 60% 40% at 90% 110%,  rgba(0,38,38,0.18)   0%, transparent 55%),
+                    radial-gradient(ellipse 50% 35% at 85% 5%,    rgba(229,88,18,0.08) 0%, transparent 45%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* ── TOP BAR ── */
+        /* ── TOPBAR ── */
         .topbar {
             background: var(--evergreen);
-            padding: 0 2rem;
-            height: 56px;
+            height: 58px;
+            padding: 0 2.25rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            flex-shrink: 0;
-        }
-        .topbar-logo {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.15rem;
-            color: var(--lime-cream);
-            letter-spacing: 0.5px;
-        }
-        .topbar-divider { width: 1px; height: 20px; background: rgba(214,245,153,0.25); }
-        .topbar-sub {
-            font-size: 0.78rem;
-            color: rgba(214,245,153,0.55);
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
         }
 
-        /* ── PAGE CONTENT ── */
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+
+        .topbar-bus-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--lime-cream) 0%, #b8e06a 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .topbar-logo-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            color: var(--lime-cream);
+            letter-spacing: 0.3px;
+        }
+
+        .topbar-sep {
+            width: 1px;
+            height: 22px;
+            background: rgba(214,245,153,0.2);
+            margin: 0 1.1rem;
+        }
+
+        .topbar-context {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(214,245,153,0.5);
+        }
+
+        .topbar-spacer { flex: 1; }
+
+        .topbar-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--evergreen);
+            background: var(--lime-cream);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        /* ── LAYOUT ── */
         main {
             flex: 1;
             display: flex;
             align-items: flex-start;
             justify-content: center;
-            padding: 3rem 1rem;
+            padding: 2.5rem 1rem 3rem;
         }
-        .page-wrapper { width: 100%; max-width: 660px; }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 680px;
+        }
 
         /* ── BACK LINK ── */
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
             color: var(--dark-teal);
             text-decoration: none;
-            padding: 0.38rem 0.9rem 0.38rem 0.65rem;
-            background: rgba(255,255,255,0.65);
-            border: 1px solid rgba(14,71,73,0.15);
+            padding: 0.4rem 0.9rem 0.4rem 0.65rem;
+            background: var(--white-glass);
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
-            margin-bottom: 1.4rem;
-            transition: background 0.15s, color 0.15s;
+            margin-bottom: 1.25rem;
+            transition: background var(--transition), color var(--transition),
+            box-shadow var(--transition), transform var(--transition);
+            backdrop-filter: blur(8px);
         }
-        .back-link:hover { background: var(--lime-cream); color: var(--evergreen); text-decoration: none; }
+
+        .back-link:hover {
+            background: var(--lime-cream);
+            color: var(--evergreen);
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,38,38,0.10);
+            transform: translateX(-2px);
+        }
+
+        .back-arrow {
+            font-size: 0.95rem;
+            transition: transform var(--transition);
+        }
+
+        .back-link:hover .back-arrow {
+            transform: translateX(-2px);
+        }
 
         /* ── RESULT CARD ── */
         .result-card {
-            background: rgba(255,255,255,0.72);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(14,71,73,0.14);
-            border-radius: 24px;
-            box-shadow: 0 2px 0 rgba(14,71,73,0.06), 0 20px 60px rgba(0,38,38,0.12);
+            background: var(--white-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
             overflow: hidden;
         }
-        .card-accent {
-            height: 5px;
-            background: linear-gradient(90deg, var(--evergreen) 0%, var(--dark-teal) 40%, var(--cayenne-red) 100%);
+
+        .card-rail {
+            height: 4px;
+            background: linear-gradient(90deg,
+            var(--evergreen)   0%,
+            var(--dark-teal)  45%,
+            var(--cayenne-red) 100%);
         }
 
         /* ── CARD HEADER ── */
-        .card-header-row {
+        .card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.6rem 2rem 1.2rem;
-            border-bottom: 1px solid rgba(14,71,73,0.09);
+            padding: 1.5rem 1.75rem 1.25rem;
+            border-bottom: 1px solid rgba(14,71,73,0.08);
         }
-        .card-heading {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.4rem;
-            color: var(--evergreen);
-        }
-        .card-heading span { color: var(--dark-teal); }
 
-        /* ── TABLE ── */
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table thead tr {
-            background: rgba(14,71,73,0.05);
-            border-bottom: 2px solid rgba(14,71,73,0.10);
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
         }
-        .data-table thead th {
-            padding: 0.85rem 2rem;
+
+        .header-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, rgba(14,71,73,0.10) 0%, rgba(14,71,73,0.06) 100%);
+            border: 1px solid rgba(14,71,73,0.10);
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: var(--dark-teal);
+        }
+
+        .header-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: var(--evergreen);
+            line-height: 1.2;
+        }
+
+        .header-title span {
+            color: var(--dark-teal);
+        }
+
+        .header-subtitle {
+            font-size: 0.76rem;
+            color: rgba(14,71,73,0.52);
+            margin-top: 0.1rem;
+        }
+
+        .count-badge {
             font-size: 0.72rem;
             font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            letter-spacing: 0.4px;
             color: var(--dark-teal);
+            background: rgba(14,71,73,0.08);
+            border: 1px solid rgba(14,71,73,0.12);
+            padding: 5px 13px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* ── DATA TABLE ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead tr {
+            background: rgba(14,71,73,0.04);
+            border-bottom: 1.5px solid rgba(14,71,73,0.09);
+        }
+
+        .data-table thead th {
+            padding: 0.8rem 1.75rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+            color: rgba(14,71,73,0.65);
             text-align: left;
         }
-        .data-table tbody tr {
-            border-bottom: 1px solid rgba(14,71,73,0.07);
-            transition: background 0.12s;
-        }
-        .data-table tbody tr:last-child { border-bottom: none; }
-        .data-table tbody tr:hover { background: rgba(214,245,153,0.20); }
-        .data-table tbody td { padding: 0.9rem 2rem; font-size: 0.92rem; color: var(--evergreen); }
 
+        .data-table tbody tr {
+            border-bottom: 1px solid rgba(14,71,73,0.06);
+            transition: background var(--transition);
+        }
+
+        .data-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .data-table tbody tr:hover {
+            background: rgba(214,245,153,0.18);
+        }
+
+        .data-table tbody td {
+            padding: 0.9rem 1.75rem;
+            font-size: 0.89rem;
+            color: var(--evergreen);
+            vertical-align: middle;
+        }
+
+        /* ID Badge */
         .id-badge {
-            display: inline-block;
-            background: rgba(14,71,73,0.09);
+            display: inline-flex;
+            align-items: center;
+            background: rgba(14,71,73,0.07);
             color: var(--dark-teal);
             font-weight: 700;
-            font-size: 0.78rem;
-            padding: 2px 10px;
+            font-size: 0.75rem;
+            padding: 3px 11px;
             border-radius: 20px;
+            border: 1px solid rgba(14,71,73,0.10);
+            font-feature-settings: "tnum";
+            letter-spacing: 0.3px;
         }
 
-        /* ── COUNT FOOTER ── */
-        .card-footer-row {
-            padding: 0.65rem 2rem;
-            background: rgba(14,71,73,0.03);
-            border-top: 1px solid rgba(14,71,73,0.07);
-            font-size: 0.78rem;
-            color: rgba(14,71,73,0.55);
+        /* Driver avatar initial */
+        .driver-cell {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 0.7rem;
         }
 
-        /* ── STATE MESSAGES ── */
-        .state-block { padding: 2.8rem 2rem; text-align: center; }
-        .state-emoji { font-size: 2.4rem; margin-bottom: 0.7rem; }
+        .driver-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(14,71,73,0.12), rgba(14,71,73,0.06));
+            border: 1px solid rgba(14,71,73,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        .driver-name {
+            font-weight: 500;
+            color: var(--evergreen);
+        }
+
+        /* ── CARD FOOTER ── */
+        .card-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.75rem;
+            background: rgba(14,71,73,0.025);
+            border-top: 1px solid rgba(14,71,73,0.07);
+        }
+
+        .foot-label {
+            font-size: 0.74rem;
+            color: rgba(14,71,73,0.5);
+        }
+
+        .foot-office {
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: rgba(14,71,73,0.4);
+        }
+
+        /* ── STATE BLOCKS ── */
+        .state-block {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .state-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
         .state-title {
             font-family: 'DM Serif Display', serif;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--evergreen);
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
         }
-        .state-body { font-size: 0.875rem; color: rgba(14,71,73,0.65); }
-        .state-block.is-error .state-title { color: var(--cayenne-red); }
+
+        .state-body {
+            font-size: 0.85rem;
+            color: rgba(14,71,73,0.62);
+            line-height: 1.55;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .state-block.is-error .state-title {
+            color: var(--cayenne-red);
+        }
+
+        .state-block.is-error .state-body {
+            color: rgba(139, 37, 0, 0.72);
+        }
     </style>
 </head>
 <body>
 
-<!-- ── TOP BAR ── -->
+<!-- ══ TOPBAR ══ -->
 <header class="topbar">
-    <span class="topbar-logo">🚌 BusTicket</span>
-    <span class="topbar-divider"></span>
-    <span class="topbar-sub">Agency Office</span>
+    <a class="topbar-brand" th:href="@{/agency-office}">
+        <div class="topbar-bus-icon">🚌</div>
+        <span class="topbar-logo-text">BusTicket</span>
+    </a>
+    <div class="topbar-sep"></div>
+    <span class="topbar-context">Agency Office</span>
+    <div class="topbar-spacer"></div>
 </header>
 
-<!-- ── MAIN ── -->
+<!-- ══ MAIN ══ -->
 <main>
     <div class="page-wrapper">
 
-        <a class="back-link" th:href="@{/agency-office}">← Back</a>
+        <a class="back-link" th:href="@{/agency-office}">
+            <span class="back-arrow">←</span>
+            Back to Office Lookup
+        </a>
 
         <div class="result-card">
-            <div class="card-accent"></div>
+            <div class="card-rail"></div>
 
             <!-- CARD HEADER -->
-            <div class="card-header-row">
-                <h1 class="card-heading">
-                    Drivers &mdash; Office <span th:text="${officeId}"></span>
-                </h1>
+            <div class="card-header">
+                <div class="header-left">
+                    <div class="header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="header-title">
+                            Drivers &mdash; Office <span th:text="${officeId}"></span>
+                        </div>
+                        <div class="header-subtitle">Personnel assigned to this office</div>
+                    </div>
+                </div>
+                <span th:if="${drivers != null and not #lists.isEmpty(drivers)}"
+                      class="count-badge"
+                      th:text="${#lists.size(drivers)} + ' found'">
+                </span>
             </div>
 
-            <!-- CASE 1: OFFICE NOT FOUND / BACKEND ERROR -->
+            <!-- STATE 1: ERROR -->
             <div th:if="${error}" class="state-block is-error">
-                <div class="state-emoji">⚠️</div>
+                <span class="state-emoji">⚠️</span>
                 <div class="state-title">Office Not Found</div>
                 <div class="state-body" th:text="${error}"></div>
             </div>
 
-            <!-- CASE 2: DRIVERS RETURNED -->
+            <!-- STATE 2: RESULTS -->
             <div th:if="${drivers != null and not #lists.isEmpty(drivers)}">
                 <table class="data-table">
                     <thead>
@@ -217,23 +446,32 @@
                     </thead>
                     <tbody>
                     <tr th:each="driver : ${drivers}">
-                        <td><span class="id-badge" th:text="'#' + ${driver.driverId}"></span></td>
-                        <td th:text="${driver.name}"></td>
+                        <td>
+                            <span class="id-badge" th:text="'#' + ${driver.driverId}"></span>
+                        </td>
+                        <td>
+                            <div class="driver-cell">
+                                <div class="driver-avatar"
+                                     th:text="${#strings.length(driver.name) > 0 ? #strings.substring(driver.name, 0, 1) : '?'}">
+                                </div>
+                                <span class="driver-name" th:text="${driver.name}"></span>
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
-                <div class="card-footer-row">
-                    <span th:text="${#lists.size(drivers)} + ' driver(s) found'"></span>
-                    <span>Office #<span th:text="${officeId}"></span></span>
+                <div class="card-foot">
+                    <span class="foot-label" th:text="${#lists.size(drivers)} + ' driver(s) found'"></span>
+                    <span class="foot-office">Office #<span th:text="${officeId}"></span></span>
                 </div>
             </div>
 
-            <!-- CASE 3: EMPTY LIST -->
+            <!-- STATE 3: EMPTY -->
             <div th:if="${drivers != null and #lists.isEmpty(drivers)}" class="state-block">
-                <div class="state-emoji">🔍</div>
+                <span class="state-emoji">🔍</span>
                 <div class="state-title">No Drivers Found</div>
                 <div class="state-body">
-                    Office <strong th:text="${officeId}"></strong> has no drivers assigned at this time.
+                    Office <strong th:text="${officeId}"></strong> currently has no drivers assigned.
                 </div>
             </div>
 
