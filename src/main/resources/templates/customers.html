@@ -31,12 +31,17 @@
 
 </div>
 
-<p class="no-data" th:if="${error}" th:text="${error}"></p>
+<div class="error-box" th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
 
-<p class="no-data" th:if="${customers == null}">
-    No data loaded yet. Enter Agency ID above.
+<p class="no-data" th:if="${customers != null and #lists.isEmpty(customers)}">
+    No customers found for this agency.
 </p>
 
+<p class="no-data" th:if="${customers == null and error == null}">
+    No data loaded yet. Enter Agency ID above.
+</p>
 
 </body>
 </html>

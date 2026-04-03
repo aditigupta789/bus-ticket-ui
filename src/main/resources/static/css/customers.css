@@ -135,6 +135,20 @@ button:hover {
     color: var(--dark-teal);
     margin-top: 10px;
 }
+
+/* ERROR BOX */
+.error-box {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px auto;
+    width: 50%;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+}
+
 /* ========================= */
 /* CUSTOMER CARD CONTAINER */
 /* ========================= */

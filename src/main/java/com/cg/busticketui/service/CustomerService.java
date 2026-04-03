@@ -2,8 +2,13 @@ package com.cg.busticketui.service;
 
 import com.cg.busticketui.dto.response.BookingResponseDto;
 import com.cg.busticketui.dto.response.CustomerResponseDto;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -20,43 +25,77 @@ public class CustomerService {
 
     private final String BASE_URL = "http://localhost:8082/api";
 
-    public List<CustomerResponseDto> getCustomers(String name, String address) {
+    public List<CustomerResponseDto> getCustomers(String name, String address, HttpSession session) {
+
+        String url = BASE_URL + "/customers/" + name + "/" + address;
+
+        HttpHeaders headers = new HttpHeaders();
+
+        String role = (String) session.getAttribute("role");
+        headers.set("role", role);
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
 
         try {
-            String url = BASE_URL + "/customers/" + name + "/" + address;
-
-            System.out.println("URL: " + url);
 
             ResponseEntity<CustomerResponseDto[]> response =
-                    restTemplate.getForEntity(url, CustomerResponseDto[].class);
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            CustomerResponseDto[].class
+                    );
+            return response.getBody() != null
+                    ? Arrays.asList(response.getBody())
+                    : List.of();
 
-            if (response.getBody() == null) {
-                return List.of();
-            }
+        } catch (HttpClientErrorException.Forbidden e) {
+            throw new RuntimeException("Access Denied");
 
-            return Arrays.asList(response.getBody());
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new RuntimeException("Customer not found");
 
         } catch (Exception e) {
-            // 🔥 THIS IS THE MOST IMPORTANT LINE
-            System.out.println("ERROR OCCURRED: " + e.getMessage());
-            return List.of();   // NEVER CRASH UI
+            throw new RuntimeException("Something went wrong");
         }
     }
 
-    public List<BookingResponseDto> getBookings(Integer customerId) {
+    public List<BookingResponseDto> getBookings(Integer customerId, HttpSession session) {
+
+        String url = BASE_URL + "/customers/" + customerId + "/bookings";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        String role = (String) session.getAttribute("role");
+        headers.set("role", role);
+
+        if ("CUSTOMER".equals(role)) {
+            headers.set("userId", customerId.toString());
+        }
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
 
         try {
-            String url = BASE_URL + "/customers/" + customerId + "/bookings";
-
             ResponseEntity<BookingResponseDto[]> response =
-                    restTemplate.getForEntity(url, BookingResponseDto[].class);
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            BookingResponseDto[].class
+                    );
 
             return response.getBody() != null
                     ? Arrays.asList(response.getBody())
                     : List.of();
 
+        } catch (HttpClientErrorException.Forbidden e) {
+            throw new RuntimeException("You cannot access this data");
+
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new RuntimeException("Bookings not found");
+
         } catch (Exception e) {
-            return List.of();
+            throw new RuntimeException("Something went wrong");
         }
     }
 }

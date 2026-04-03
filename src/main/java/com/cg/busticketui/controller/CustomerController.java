@@ -3,6 +3,7 @@ package com.cg.busticketui.controller;
 import com.cg.busticketui.dto.response.BookingResponseDto;
 import com.cg.busticketui.dto.response.CustomerResponseDto;
 import com.cg.busticketui.service.CustomerService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,9 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    // 🔥 LOAD PAGE
     @GetMapping
     public String loadPage() {
-        return "agencyCustomers"; // IMPORTANT (your file name)
+        return "agencyCustomers";
     }
 
     // 🔥 FETCH CUSTOMERS
@@ -30,10 +30,11 @@ public class CustomerController {
     public String getCustomers(
             @RequestParam String name,
             @RequestParam String address,
+            HttpSession session,
             Model model) {
 
         List<CustomerResponseDto> customers =
-                customerService.getCustomers(name, address);
+                customerService.getCustomers(name, address,session);
 
         model.addAttribute("customers", customers);
 
@@ -44,10 +45,11 @@ public class CustomerController {
     @GetMapping("/bookings")
     public String getBookings(
             @RequestParam Integer customerId,
+            HttpSession session,
             Model model) {
 
         List<BookingResponseDto> bookings =
-                customerService.getBookings(customerId);
+                customerService.getBookings(customerId,session);
 
         model.addAttribute("bookings", bookings);
 
