@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Popular Routes</title>
+    <link rel="stylesheet" th:href="@{/css/route.css}">
+</head>
+<body>
+
+<div class="container">
+    <h2>Popular Routes</h2>
+    <div class="card-container">
+
+        <div class="card" th:each="route : ${routes}">
+            <h3 th:text="${route.fromCity} + ' → ' + ${route.toCity}"></h3>
+            <p>Duration:
+                <b th:text="${route.duration} + ' hrs'"></b>
+            </p>
+            <p>Stops:
+                <span th:text="${route.breakPoints}"></span>
+            </p>
+        </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:20px;">
+        <a th:href="@{/routes}">⬅ Back</a>
+    </div>
+
+</div>
+
+</body>
+</html>
