@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bus Route Finder</title>
+    <link rel="stylesheet" th:href="@{/css/route.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Bus Route Finder</h2>
+
+    <!-- Search -->
+    <form th:action="@{/routes/search}" method="get">
+        <div class="form-row">
+            <label>
+                <input type="text" name="source" placeholder="Source City" required>
+            </label>
+            <label>
+                <input type="text" name="destination" placeholder="Destination City" required>
+            </label>
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    <!--Popular -->
+    <div style="text-align:center;">
+        <a th:href="@{/routes/popular}">
+            <button class="popular-btn">View Popular Routes</button>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

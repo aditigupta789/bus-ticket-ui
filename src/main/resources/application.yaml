@@ -1,3 +1,10 @@
 spring:
   application:
     name: bus-ticket-ui
+
+server:
+  port: 8083
+
+
+  thymeleaf:
+    cache: false
