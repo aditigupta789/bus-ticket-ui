@@ -12,11 +12,9 @@
 
         <div class="card" th:each="route : ${routes}">
             <h3 th:text="${route.fromCity} + ' → ' + ${route.toCity}"></h3>
-
             <p>Duration:
                 <b th:text="${route.duration} + ' hrs'"></b>
             </p>
-
             <p>Stops:
                 <span th:text="${route.breakPoints}"></span>
             </p>

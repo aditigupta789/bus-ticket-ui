@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 /**
- * DTO for route details used in UI.
+ * DTO for route details used to map the response coming from the backend API.
  */
 @Getter
 @Setter

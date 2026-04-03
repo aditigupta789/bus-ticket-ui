@@ -25,7 +25,7 @@ public class RouteController {
      * Displays the home page with search form and options.
      */
     @GetMapping
-    public String home(Model model) {
+    public String home() {
         return "route/route-home";
     }
 

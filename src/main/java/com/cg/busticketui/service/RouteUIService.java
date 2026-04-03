@@ -36,14 +36,11 @@ public class RouteUIService {
     public List<RouteResponseDto> getRoutes(String source, String destination) {
         try {
             String url = BASE_URL + "/search?source=" + source + "&destination=" + destination;
-
             return restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<RouteResponseDto>>() {}
-            ).getBody();
-
+                    new ParameterizedTypeReference<List<RouteResponseDto>>() {}).getBody();
         } catch (Exception e) {
             throw new RuntimeException("No routes found");
         }
