@@ -2,77 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Customer Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <link rel="stylesheet" th:href="@{/css/customers.css?v=2}">
 </head>
 
 <body>
 
-<h1>Customer Dashboard</h1>
+<div class="main-container">
 
-<!-- SEARCH CUSTOMER -->
-<h2>Search Customer by Name & Address</h2>
+    <h1>Customer Dashboard</h1>
 
-<form action="/customer/search" method="get">
-    <input type="text" name="name" placeholder="Enter Name" required />
-    <input type="text" name="address" placeholder="Enter Address" required />
-    <button type="submit">Fetch Customers</button>
-</form>
-
-<br>
-
-<!-- CUSTOMER LIST -->
-<div th:if="${customers != null}">
-    <h3>Customer List:</h3>
-
-    <div th:each="c : ${customers}">
-        <p>ID: <span th:text="${c.customerId}"></span></p>
-        <p>Name: <span th:text="${c.name}"></span></p>
-        <p>Email: <span th:text="${c.email}"></span></p>
-        <p>Phone: <span th:text="${c.phone}"></span></p>
-        <p>City: <span th:text="${c.city}"></span></p>
-        <hr>
+    <!-- CUSTOMER FORM -->
+    <div class="form-container">
+        <h2>Search Customer</h2>
+        <form action="/customer/search" method="get">
+            <input type="text" name="name" placeholder="Enter Name" required />
+            <input type="text" name="address" placeholder="Enter Address" required />
+            <button type="submit">Get Customers</button>
+        </form>
     </div>
+
+    <!-- CUSTOMER CARDS -->
+    <div class="customer-container" th:if="${customers != null}">
+        <div class="customer-card" th:each="c : ${customers}">
+            <h3 th:text="${c.name}"></h3>
+            <p>ID: <span th:text="${c.customerId}"></span></p>
+            <p>Email: <span th:text="${c.email}"></span></p>
+            <p>Phone: <span th:text="${c.phone}"></span></p>
+            <p>City: <span th:text="${c.city}"></span></p>
+        </div>
+    </div>
+
+    <!-- BOOKING FORM -->
+    <div class="form-container">
+        <h2>Get Bookings</h2>
+        <form action="/customer/bookings" method="get">
+            <input type="number" name="customerId" placeholder="Enter Customer ID" required />
+            <button type="submit">Get Bookings</button>
+        </form>
+    </div>
+
+    <!-- BOOKING CARDS -->
+    <div class="booking-container" th:if="${bookings != null}">
+        <div class="booking-card" th:each="b : ${bookings}">
+            <h3>Booking</h3>
+            <p>Booking ID: <span th:text="${b.bookingId}"></span></p>
+            <p>Trip ID: <span th:text="${b.tripId}"></span></p>
+            <p>Seat: <span th:text="${b.seatNumber}"></span></p>
+            <p>Status: <span th:text="${b.status}"></span></p>
+        </div>
+    </div>
+
 </div>
-
-<p th:if="${customers == null}">
-    No customer data yet.
-</p>
-
-<hr>
-
-<!-- BOOKINGS -->
-<h2>Get Bookings by Customer ID</h2>
-
-<form action="/customer/bookings" method="get">
-    <input type="number" name="customerId" placeholder="Enter Customer ID" required />
-    <button type="submit">Fetch Bookings</button>
-</form>
-
-<br>
-
-<div th:if="${bookings != null}">
-    <h3>Booking List:</h3>
-
-    <table border="1">
-        <tr>
-            <th>Booking ID</th>
-            <th>Trip ID</th>
-            <th>Seat</th>
-            <th>Status</th>
-        </tr>
-
-        <tr th:each="b : ${bookings}">
-            <td th:text="${b.bookingId}"></td>
-            <td th:text="${b.tripId}"></td>
-            <td th:text="${b.seatNumber}"></td>
-            <td th:text="${b.status}"></td>
-        </tr>
-    </table>
-</div>
-
-<p th:if="${bookings == null}">
-    No booking data yet.
-</p>
 
 </body>
 </html>
