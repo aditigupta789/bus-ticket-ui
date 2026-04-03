@@ -1,3 +1,11 @@
+server:
+  port: 8084
+
+backend:
+  base-url: http://localhost:8082
+
 spring:
   application:
     name: bus-ticket-ui
+  thymeleaf:
+    cache: false

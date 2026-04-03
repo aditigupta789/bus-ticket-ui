@@ -1,0 +1,80 @@
+:root {
+    /* Color palette (reference) */
+    --evergreen: #002626ff;
+    --dark-teal: #0e4749ff;
+    --lime-cream: #d6f599ff;
+    --cayenne-red: #e55812ff;
+    --soft-linen: #efe7daff;
+
+    /* Background gradient (reference) */
+    --gradient-radial: radial-gradient(#002626ff, #0e4749ff, #d6f599ff, #e55812ff, #efe7daff);
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--gradient-radial);
+    color: #002626;
+}
+
+a {
+    text-decoration: none;
+}
+
+.app-card {
+    background: rgba(239, 231, 218, 0.92);
+    border: 1px solid rgba(14, 71, 73, 0.18);
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.app-card-pad {
+    padding: 28px;
+}
+
+.app-heading {
+    color: rgba(0, 38, 38, 1);
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+.app-subtitle {
+    color: rgba(14, 71, 73, 1);
+}
+
+.app-btn-primary {
+    background: linear-gradient(135deg, rgba(0, 38, 38, 1), rgba(14, 71, 73, 1));
+    border: none;
+    color: rgba(214, 245, 153, 1);
+    font-weight: 700;
+}
+
+.app-btn-primary:hover {
+    filter: brightness(1.03);
+}
+
+.app-btn-outline {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(14, 71, 73, 1);
+    color: rgba(14, 71, 73, 1);
+    font-weight: 700;
+}
+
+.app-field {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(14, 71, 73, 0.25);
+    border-radius: 12px;
+}
+
+.app-table thead th {
+    background: rgba(14, 71, 73, 0.08);
+    color: rgba(0, 38, 38, 1);
+    border-bottom-color: rgba(14, 71, 73, 0.18);
+}
+
+.app-table td {
+    color: rgba(0, 38, 38, 1);
+}
