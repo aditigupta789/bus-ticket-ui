@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/customers.css?v=2}">
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <h1>Customer Dashboard</h1>
+
+    <!-- CUSTOMER FORM -->
+    <div class="form-container">
+        <h2>Search Customer</h2>
+        <form action="/customer/search" method="get">
+            <input type="text" name="name" placeholder="Enter Name" required />
+            <input type="text" name="address" placeholder="Enter Address" required />
+            <button type="submit">Get Customers</button>
+        </form>
+    </div>
+
+    <!-- CUSTOMER CARDS -->
+    <div class="customer-container" th:if="${customers != null}">
+        <div class="customer-card" th:each="c : ${customers}">
+            <h3 th:text="${c.name}"></h3>
+            <p>ID: <span th:text="${c.customerId}"></span></p>
+            <p>Email: <span th:text="${c.email}"></span></p>
+            <p>Phone: <span th:text="${c.phone}"></span></p>
+            <p>City: <span th:text="${c.city}"></span></p>
+        </div>
+    </div>
+
+    <!-- BOOKING FORM -->
+    <div class="form-container">
+        <h2>Get Bookings</h2>
+        <form action="/customer/bookings" method="get">
+            <input type="number" name="customerId" placeholder="Enter Customer ID" required />
+            <button type="submit">Get Bookings</button>
+        </form>
+    </div>
+
+    <!-- BOOKING CARDS -->
+    <div class="booking-container" th:if="${bookings != null}">
+        <div class="booking-card" th:each="b : ${bookings}">
+            <h3>Booking</h3>
+            <p>Booking ID: <span th:text="${b.bookingId}"></span></p>
+            <p>Trip ID: <span th:text="${b.tripId}"></span></p>
+            <p>Seat: <span th:text="${b.seatNumber}"></span></p>
+            <p>Status: <span th:text="${b.status}"></span></p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
