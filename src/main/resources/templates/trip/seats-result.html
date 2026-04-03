@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Seats</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container page">
+    <div class="header">
+        <h2>Available Seats</h2>
+        <a class="link-back" th:href="@{/trip/dashboard}">← Back to dashboard</a>
+    </div>
+
+    <div class="card result-card">
+        <p class="muted" th:if="${tripId != null}">Trip ID: <strong th:text="${tripId}">1</strong></p>
+
+        <div class="error" th:if="${seatsError}" th:text="${seatsError}"></div>
+
+        <div class="result" th:if="${seats != null and seatsError == null}">
+            <div class="muted" style="margin-bottom: 8px;"><b>Available Seat Details</b></div>
+            <ul class="kv">
+                <li>
+                    <strong>Trip ID:</strong>
+                    <span th:text="${seats['tripId'] != null ? seats['tripId'] : (seats['trip_id'] != null ? seats['trip_id'] : tripId)}">1</span>
+                </li>
+                <li>
+                    <strong>Available Seats:</strong>
+                    <span th:text="${seats['availableSeats'] != null ? seats['availableSeats'] : (seats['available_seats'] != null ? seats['available_seats'] : 'N/A')}">0</span>
+                </li>
+            </ul>
+            <div class="muted" th:if="${seats.isEmpty()}" style="margin-top: 10px;">No seat information found.</div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,10 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Trips Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="container page">
+    <div class="header">
+        <h2>Trips Dashboard</h2>
+        <div class="muted">
+            User: <span th:text="${session.username != null ? session.username : 'Guest'}">Guest</span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <section class="card">
+            <h3>Available Seats</h3>
+            <p class="muted small">Enter a trip ID and open results on a new page.</p>
+            <form th:action="@{/trip/seats}" method="get">
+                <div class="row single">
+                    <div>
+                        <label for="tripId">Trip ID</label>
+                        <input id="tripId" name="tripId" type="number" min="1" required/>
+                    </div>
+                </div>
+                <button type="submit">Fetch Seats</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h3>Search Trips</h3>
+            <p class="muted small">Search by source and destination; results open on a new page.</p>
+            <form th:action="@{/trip/search}" method="get">
+                <div class="row">
+                    <div>
+                        <label for="source">Source</label>
+                        <input id="source" name="source" type="text" required/>
+                    </div>
+                    <div>
+                        <label for="destination">Destination</label>
+                        <input id="destination" name="destination" type="text" required/>
+                    </div>
+                </div>
+                <button type="submit">Fetch Trips</button>
+            </form>
+        </section>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>
