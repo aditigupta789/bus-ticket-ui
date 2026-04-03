@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<nav xmlns:th="http://www.thymeleaf.org" th:fragment="navbar" class="nav-outer">
+    <div class="container nav">
+        <a class="brand" th:href="@{/trip/dashboard}">BusTicket Booking</a>
+        <div class="nav-right">
+            <span class="muted nav-user">
+                User:
+                <span th:text="${session.username != null ? session.username : 'Guest'}">Guest</span>
+            </span>
+            <a class="link" th:href="@{/logout}">Logout</a>
+        </div>
+    </div>
+</nav>
