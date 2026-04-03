@@ -9,7 +9,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidLoginException.class)
     public String handleInvalidLogin(InvalidLoginException ex, Model model) {
-
         model.addAttribute("error", ex.getMessage());
         return "login";
     }
