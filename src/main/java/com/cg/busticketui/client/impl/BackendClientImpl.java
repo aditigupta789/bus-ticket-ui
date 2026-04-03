@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -36,7 +38,7 @@ public class BackendClientImpl implements BackendClient {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    @Value("${backend.base-url}")
+    @Value("${app.backend.base-url}")
     private String backendBaseUrl;
 
     // -------------------- GET --------------------
@@ -44,16 +46,18 @@ public class BackendClientImpl implements BackendClient {
     @Override
     public <T> T get(String path,
                      Map<String, ?> queryParams,
+                     HttpHeaders headers,
                      ParameterizedTypeReference<T> responseType) {
 
         URI uri = buildUri(path, queryParams);
         log.debug("Calling backend GET: {}", uri);
 
         try {
+            HttpEntity<String> entity = new HttpEntity<>(headers);
             ResponseEntity<T> response = restTemplate.exchange(
                     uri,
                     HttpMethod.GET,
-                    null,
+                    entity,
                     responseType
             );
 
@@ -69,13 +73,10 @@ public class BackendClientImpl implements BackendClient {
             String rawBody = ex.getResponseBodyAsString();
             log.error("Backend API error — status: {}, body: {}", ex.getStatusCode(), rawBody);
 
-            // Extract only the human-readable `message` field from the backend's JSON error body.
-            // This prevents raw JSON (e.g. {"path":...,"status":404,...}) from ever reaching the UI.
             String userMessage = extractMessageFromJson(rawBody);
             throw new CustomException(userMessage);
 
         } catch (CustomException ex) {
-            // Re-throw already-wrapped exceptions without double-wrapping
             throw ex;
 
         } catch (Exception ex) {
