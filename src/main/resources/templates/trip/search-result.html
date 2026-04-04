@@ -1,81 +1,482 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
     Page: Trip Search Results
     Purpose: Displays available trips between selected source and destination
     Data Source: Backend via Thymeleaf (trips list, tripsError, source, destination)
-
-    Features:
-      - Reusable layout using navbar and footer fragments
-      - Displays search context (source → destination)
-      - Handles dynamic trip data (supports multiple key formats like camelCase & snake_case)
-
     States:
-      - Error (backend/API failure)
+      - Error  (backend / API failure)
       - Results (list of trips in table format)
-      - Empty (no trips found)
+      - Empty  (no trips found)
 -->
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Search Trips</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Trip Search Results — BusTicket</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           DESIGN TOKENS
+        ═══════════════════════════════════════════ */
+        :root {
+            --evergreen:     #002626;
+            --dark-teal:     #0e4749;
+            --lime-cream:    #d6f599;
+            --cayenne-red:   #e55812;
+            --soft-linen:    #efe7da;
+            --white-glass:   rgba(255, 255, 255, 0.78);
+            --border-subtle: rgba(14, 71, 73, 0.13);
+            --shadow-card:   0 1px 3px rgba(0,38,38,0.06),
+                             0 8px 24px rgba(0,38,38,0.10),
+                             0 32px 64px rgba(0,38,38,0.08);
+            --radius-card:   20px;
+            --radius-btn:    10px;
+            --transition:    0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--soft-linen);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 15% -5%,  rgba(14,71,73,0.16)  0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 90% 110%, rgba(0,38,38,0.18)   0%, transparent 55%),
+                radial-gradient(ellipse 50% 35% at 85% 5%,   rgba(229,88,18,0.08) 0%, transparent 45%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--evergreen);
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            background: var(--evergreen);
+            height: 58px;
+            padding: 0 2.25rem;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+        }
+        .topbar-brand {
+            display: flex; align-items: center; gap: 0.6rem;
+            text-decoration: none;
+        }
+        .topbar-bus-icon {
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, var(--lime-cream), #b8e06a);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem;
+        }
+        .topbar-logo-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            color: var(--lime-cream);
+        }
+        .topbar-sep {
+            width: 1px; height: 22px;
+            background: rgba(214,245,153,0.2);
+            margin: 0 1.1rem;
+        }
+        .topbar-context {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(214,245,153,0.5);
+        }
+        .topbar-spacer { flex: 1; }
+
+        /* ── LAYOUT ── */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2.5rem 1rem 3rem;
+        }
+        .page-wrapper {
+            width: 100%;
+            max-width: 960px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--dark-teal);
+            text-decoration: none;
+            padding: 0.4rem 0.9rem 0.4rem 0.65rem;
+            background: var(--white-glass);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            backdrop-filter: blur(8px);
+            transition: background var(--transition), color var(--transition),
+                        transform var(--transition), box-shadow var(--transition);
+        }
+        .back-link:hover {
+            background: var(--lime-cream);
+            color: var(--evergreen);
+            text-decoration: none;
+            transform: translateX(-2px);
+            box-shadow: 0 2px 8px rgba(0,38,38,0.10);
+        }
+        .back-arrow { transition: transform var(--transition); }
+        .back-link:hover .back-arrow { transform: translateX(-2px); }
+
+        /* ── RESULT CARD ── */
+        .result-card {
+            background: var(--white-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+        .card-rail {
+            height: 4px;
+            background: linear-gradient(90deg, var(--evergreen), var(--dark-teal), var(--cayenne-red));
+        }
+
+        /* ── CARD HEADER ── */
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 1.75rem 1.25rem;
+            border-bottom: 1px solid rgba(14,71,73,0.08);
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .header-left {
+            display: flex; align-items: center; gap: 0.9rem;
+        }
+        .header-icon {
+            width: 42px; height: 42px;
+            background: rgba(14,71,73,0.07);
+            border: 1px solid rgba(14,71,73,0.10);
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .header-icon svg { width: 19px; height: 19px; stroke: var(--dark-teal); }
+        .header-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: var(--evergreen);
+            line-height: 1.2;
+        }
+        .header-subtitle {
+            font-size: 0.76rem;
+            color: rgba(14,71,73,0.52);
+            margin-top: 0.1rem;
+        }
+        .route-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.79rem;
+            font-weight: 600;
+            color: var(--dark-teal);
+            background: rgba(14,71,73,0.07);
+            border: 1px solid rgba(14,71,73,0.12);
+            padding: 5px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .count-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: var(--dark-teal);
+            background: rgba(14,71,73,0.08);
+            border: 1px solid rgba(14,71,73,0.12);
+            padding: 5px 13px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+        .header-badges {
+            display: flex; align-items: center; gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ── DATA TABLE ── */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table thead tr {
+            background: rgba(14,71,73,0.04);
+            border-bottom: 1.5px solid rgba(14,71,73,0.09);
+        }
+        .data-table thead th {
+            padding: 0.8rem 1.2rem;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+            color: rgba(14,71,73,0.65);
+            text-align: left;
+            white-space: nowrap;
+        }
+        .data-table tbody tr {
+            border-bottom: 1px solid rgba(14,71,73,0.06);
+            transition: background var(--transition);
+        }
+        .data-table tbody tr:last-child { border-bottom: none; }
+        .data-table tbody tr:hover { background: rgba(214,245,153,0.18); }
+        .data-table tbody td {
+            padding: 0.85rem 1.2rem;
+            font-size: 0.875rem;
+            color: var(--evergreen);
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        /* Badges */
+        .id-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(14,71,73,0.07);
+            color: var(--dark-teal);
+            font-weight: 700;
+            font-size: 0.74rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(14,71,73,0.10);
+            font-feature-settings: "tnum";
+        }
+
+        .route-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-weight: 600;
+        }
+        .route-arrow {
+            color: rgba(14,71,73,0.40);
+            font-size: 0.8rem;
+        }
+
+        .fare-val {
+            font-weight: 700;
+            color: var(--dark-teal);
+        }
+
+        .seats-val {
+            font-weight: 700;
+        }
+        .seats-val.low  { color: var(--cayenne-red); }
+        .seats-val.ok   { color: #1a6e35; }
+
+        /* ── CARD FOOTER ── */
+        .card-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.75rem;
+            background: rgba(14,71,73,0.025);
+            border-top: 1px solid rgba(14,71,73,0.07);
+        }
+        .foot-label {
+            font-size: 0.74rem;
+            color: rgba(14,71,73,0.5);
+        }
+
+        /* ── STATE BLOCKS ── */
+        .state-block {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .state-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .state-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+            color: var(--evergreen);
+            margin-bottom: 0.5rem;
+        }
+        .state-body {
+            font-size: 0.85rem;
+            color: rgba(14,71,73,0.62);
+            line-height: 1.55;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+        .state-block.is-error .state-title { color: var(--cayenne-red); }
+        .state-block.is-error .state-body  { color: rgba(139,37,0,0.72); }
+
+        /* Responsive scroll wrapper for wide table */
+        .table-scroll {
+            overflow-x: auto;
+        }
+        @media (max-width: 700px) {
+            .data-table thead th,
+            .data-table tbody td { padding: 0.75rem 0.85rem; }
+        }
+    </style>
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<main class="container page">
-    <div class="header">
-        <h2>Search Results</h2>
-        <a class="link-back" th:href="@{/trip/dashboard}">← Back to dashboard</a>
-    </div>
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+    <a class="topbar-brand" th:href="@{/trip/dashboard}">
+        <div class="topbar-bus-icon">🚌</div>
+        <span class="topbar-logo-text">BusTicket</span>
+    </a>
+    <div class="topbar-sep"></div>
+    <span class="topbar-context">Trip Management</span>
+    <div class="topbar-spacer"></div>
+</header>
 
-    <p class="muted" th:if="${source != null and destination != null}">
-        <span th:text="${source}">Mumbai</span> → <span th:text="${destination}">Pune</span>
-    </p>
+<!-- ══ MAIN ══ -->
+<main>
+    <div class="page-wrapper">
 
-    <div class="card result-card">
-        <div class="error" th:if="${tripsError}" th:text="${tripsError}"></div>
+        <a class="back-link" th:href="@{/trip/dashboard}">
+            <span class="back-arrow">←</span>
+            Back to Dashboard
+        </a>
 
-        <div class="result" th:if="${trips != null and #lists.size(trips) > 0 and tripsError == null}">
-            <table>
-                <thead>
-                <tr>
-                    <th>Trip ID</th>
-                    <th>Route ID</th>
-                    <th>Bus ID</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Trip Date</th>
-                    <th>Fare</th>
-                    <th>Available Seats</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="trip : ${trips}">
-                    <td th:text="${trip['tripId'] != null ? trip['tripId'] : (trip['trip_id'] != null ? trip['trip_id'] : 'N/A')}"></td>
-                    <td th:text="${trip['routeId'] != null ? trip['routeId'] : (trip['route_id'] != null ? trip['route_id'] : 'N/A')}"></td>
-                    <td th:text="${trip['busId'] != null ? trip['busId'] : (trip['bus_id'] != null ? trip['bus_id'] : 'N/A')}"></td>
-                    <td th:text="${trip['fromCity'] != null ? trip['fromCity'] : (trip['from_city'] != null ? trip['from_city'] : 'N/A')}"></td>
-                    <td th:text="${trip['toCity'] != null ? trip['toCity'] : (trip['to_city'] != null ? trip['to_city'] : 'N/A')}"></td>
-                    <td th:text="${trip['departureTime'] != null ? trip['departureTime'] : (trip['departure_time'] != null ? trip['departure_time'] : 'N/A')}"></td>
-                    <td th:text="${trip['arrivalTime'] != null ? trip['arrivalTime'] : (trip['arrival_time'] != null ? trip['arrival_time'] : 'N/A')}"></td>
-                    <td th:text="${trip['tripDate'] != null ? trip['tripDate'] : (trip['trip_date'] != null ? trip['trip_date'] : 'N/A')}"></td>
-                    <td th:text="${trip['fare'] != null ? trip['fare'] : 'N/A'}"></td>
-                    <td th:text="${trip['availableSeats'] != null ? trip['availableSeats'] : (trip['available_seats'] != null ? trip['available_seats'] : 'N/A')}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="result-card">
+            <div class="card-rail"></div>
 
-        <div class="muted result" th:if="${trips != null and #lists.size(trips) == 0 and tripsError == null}" style="margin-top: 14px;">
-            No trips found.
+            <!-- CARD HEADER -->
+            <div class="card-header">
+                <div class="header-left">
+                    <div class="header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="header-title">Search Results</div>
+                        <div class="header-subtitle">Trips matching your route</div>
+                    </div>
+                </div>
+                <div class="header-badges">
+                    <span class="route-pill"
+                          th:if="${source != null and destination != null}">
+                        <span th:text="${source}"></span>
+                        <span>→</span>
+                        <span th:text="${destination}"></span>
+                    </span>
+                    <span class="count-badge"
+                          th:if="${trips != null and not #lists.isEmpty(trips)}"
+                          th:text="${#lists.size(trips)} + ' found'">
+                    </span>
+                </div>
+            </div>
+
+            <!-- STATE 1: ERROR -->
+            <div th:if="${tripsError}" class="state-block is-error">
+                <span class="state-emoji">⚠️</span>
+                <div class="state-title">Unable to Load Trips</div>
+                <div class="state-body" th:text="${tripsError}"></div>
+            </div>
+
+            <!-- STATE 2: RESULTS TABLE -->
+            <div th:if="${trips != null and not #lists.isEmpty(trips) and tripsError == null}">
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Trip ID</th>
+                            <th>Route ID</th>
+                            <th>Bus ID</th>
+                            <th>Route</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Date</th>
+                            <th>Fare</th>
+                            <th>Seats</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="trip : ${trips}">
+                            <td>
+                                <span class="id-badge"
+                                      th:text="'#' + (${trip['tripId']} != null ? ${trip['tripId']} : (${trip['trip_id']} != null ? ${trip['trip_id']} : 'N/A'))">
+                                </span>
+                            </td>
+                            <td>
+                                <span class="id-badge"
+                                      th:text="${trip['routeId']} != null ? ${trip['routeId']} : (${trip['route_id']} != null ? ${trip['route_id']} : 'N/A')">
+                                </span>
+                            </td>
+                            <td>
+                                <span class="id-badge"
+                                      th:text="${trip['busId']} != null ? ${trip['busId']} : (${trip['bus_id']} != null ? ${trip['bus_id']} : 'N/A')">
+                                </span>
+                            </td>
+                            <td>
+                                <div class="route-cell">
+                                    <span th:text="${trip['fromCity']} != null ? ${trip['fromCity']} : (${trip['from_city']} != null ? ${trip['from_city']} : 'N/A')"></span>
+                                    <span class="route-arrow">→</span>
+                                    <span th:text="${trip['toCity']} != null ? ${trip['toCity']} : (${trip['to_city']} != null ? ${trip['to_city']} : 'N/A')"></span>
+                                </div>
+                            </td>
+                            <td th:text="${trip['departureTime']} != null ? ${trip['departureTime']} : (${trip['departure_time']} != null ? ${trip['departure_time']} : 'N/A')"></td>
+                            <td th:text="${trip['arrivalTime']} != null ? ${trip['arrivalTime']} : (${trip['arrival_time']} != null ? ${trip['arrival_time']} : 'N/A')"></td>
+                            <td th:text="${trip['tripDate']} != null ? ${trip['tripDate']} : (${trip['trip_date']} != null ? ${trip['trip_date']} : 'N/A')"></td>
+                            <td>
+                                <span class="fare-val"
+                                      th:text="${trip['fare']} != null ? '₹' + ${trip['fare']} : 'N/A'">
+                                </span>
+                            </td>
+                            <td>
+                                <span class="seats-val"
+                                      th:text="${trip['availableSeats']} != null ? ${trip['availableSeats']} : (${trip['available_seats']} != null ? ${trip['available_seats']} : 'N/A')">
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-foot">
+                    <span class="foot-label"
+                          th:text="${#lists.size(trips)} + ' trip(s) found'">
+                    </span>
+                    <span class="foot-label"
+                          th:if="${source != null and destination != null}"
+                          th:text="${source} + ' → ' + ${destination}">
+                    </span>
+                </div>
+            </div>
+
+            <!-- STATE 3: EMPTY -->
+            <div th:if="${trips != null and #lists.isEmpty(trips) and tripsError == null}"
+                 class="state-block">
+                <span class="state-emoji">🔍</span>
+                <div class="state-title">No Trips Found</div>
+                <div class="state-body">
+                    No trips are currently available from
+                    <strong th:text="${source}"></strong> to
+                    <strong th:text="${destination}"></strong>.
+                    Try a different route or date.
+                </div>
+            </div>
+
         </div>
     </div>
 </main>
 
-<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
