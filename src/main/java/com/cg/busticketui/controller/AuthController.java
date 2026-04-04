@@ -35,9 +35,9 @@ public class AuthController {
 
         switch (user.getRole()) {
             case "ADMIN":
-                return "redirect:/agency/customers";
+                return "redirect:/admin/home";
             case "AGENCY":
-                return "redirect:/agency/customers";
+                return "redirect:/agency/home";
             case "CUSTOMER":
                 return "redirect:/customer";
         }
