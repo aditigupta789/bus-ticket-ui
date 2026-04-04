@@ -27,27 +27,6 @@
 
     <h1>Customer Dashboard</h1>
 
-    <!-- CUSTOMER FORM -->
-    <div class="form-container">
-        <h2>Search Customer</h2>
-        <form action="/customer/search" method="get">
-            <input type="text" name="name" placeholder="Enter Name" required />
-            <input type="text" name="address" placeholder="Enter Address" required />
-            <button type="submit">Get Customers</button>
-        </form>
-    </div>
-
-    <!-- CUSTOMER CARDS -->
-    <div class="customer-container" th:if="${customers != null}">
-        <div class="customer-card" th:each="c : ${customers}">
-            <h3 th:text="${c.name}"></h3>
-            <p>ID: <span th:text="${c.customerId}"></span></p>
-            <p>Email: <span th:text="${c.email}"></span></p>
-            <p>Phone: <span th:text="${c.phone}"></span></p>
-            <p>City: <span th:text="${c.city}"></span></p>
-        </div>
-    </div>
-
     <!-- BOOKING FORM -->
     <div class="form-container">
         <h2>Get Bookings</h2>

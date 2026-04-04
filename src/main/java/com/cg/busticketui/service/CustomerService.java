@@ -41,57 +41,6 @@ public class CustomerService {
     private final String BASE_URL = "http://localhost:8082/api";
 
     /**
-     * Retrieves a list of customers based on name and address.
-     *
-     * <p>
-     * Sends a GET request to the backend service with role-based headers.
-     * Returns an empty list if no customers are found.
-     * </p>
-     *
-     * @param name    the name of the customer
-     * @param address the address of the customer
-     * @param session the HTTP session containing user role information
-     *
-     * @return a list of {@link CustomerResponseDto} matching the criteria
-     *
-     * @throws RuntimeException if access is denied or an error occurs
-     */
-    public List<CustomerResponseDto> getCustomers(String name, String address, HttpSession session) {
-
-        String url = BASE_URL + "/customers/" + name + "/" + address;
-
-        HttpHeaders headers = new HttpHeaders();
-
-        String role = (String) session.getAttribute("role");
-        headers.set("role", role);
-
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        try {
-
-            ResponseEntity<CustomerResponseDto[]> response =
-                    restTemplate.exchange(
-                            url,
-                            HttpMethod.GET,
-                            entity,
-                            CustomerResponseDto[].class
-                    );
-            return response.getBody() != null
-                    ? Arrays.asList(response.getBody())
-                    : List.of();
-
-        } catch (HttpClientErrorException.Forbidden e) {
-            throw new RuntimeException("Access Denied");
-
-        } catch (HttpClientErrorException.NotFound e) {
-            throw new RuntimeException("Customer not found");
-
-        } catch (Exception e) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
-
-    /**
      * Retrieves booking details for a specific customer.
      *
      * <p>

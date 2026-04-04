@@ -50,36 +50,6 @@ public class CustomerController {
     }
 
     /**
-     * Handles request to search customers based on name and address.
-     *
-     * <p>
-     * Fetches matching customers from the service layer and adds
-     * the result to the model.
-     * </p>
-     *
-     * @param name    the name of the customer to search
-     * @param address the address of the customer to search
-     * @param session the HTTP session used for maintaining user/session context
-     * @param model   the model used to pass data to the view
-     *
-     * @return the customer view ("agencyCustomers") populated with results
-     */
-    @GetMapping("/search")
-    public String getCustomers(
-            @RequestParam String name,
-            @RequestParam String address,
-            HttpSession session,
-            Model model) {
-
-        List<CustomerResponseDto> customers =
-                customerService.getCustomers(name, address,session);
-
-        model.addAttribute("customers", customers);
-
-        return "agencyCustomers"; // IMPORTANT
-    }
-
-    /**
      * Handles request to fetch bookings for a specific customer.
      *
      * <p>
