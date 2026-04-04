@@ -1,41 +1,380 @@
-<!DOCTYPE html>
+<!doctype html>
+<!--
+    Page: Available Seats
+    Purpose: Displays seat availability details for a selected trip
+    Data Source: Backend via Thymeleaf (seats map, seatsError, tripId)
+    States:
+      - Error  (trip not found / backend issue)
+      - Result (seat details shown as key-value pairs)
+-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Available Seats</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Available Seats — BusTicket</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════
+           DESIGN TOKENS
+        ═══════════════════════════════════════════ */
+        :root {
+            --evergreen:     #002626;
+            --dark-teal:     #0e4749;
+            --lime-cream:    #d6f599;
+            --cayenne-red:   #e55812;
+            --soft-linen:    #efe7da;
+            --white-glass:   rgba(255, 255, 255, 0.78);
+            --border-subtle: rgba(14, 71, 73, 0.13);
+            --shadow-card:   0 1px 3px rgba(0,38,38,0.06),
+                             0 8px 24px rgba(0,38,38,0.10),
+                             0 32px 64px rgba(0,38,38,0.08);
+            --radius-card:   20px;
+            --radius-btn:    10px;
+            --transition:    0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--soft-linen);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 15% -5%,  rgba(14,71,73,0.16)  0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 90% 110%, rgba(0,38,38,0.18)   0%, transparent 55%),
+                radial-gradient(ellipse 50% 35% at 85% 5%,   rgba(229,88,18,0.08) 0%, transparent 45%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--evergreen);
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            background: var(--evergreen);
+            height: 58px;
+            padding: 0 2.25rem;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+        }
+        .topbar-brand {
+            display: flex; align-items: center; gap: 0.6rem;
+            text-decoration: none;
+        }
+        .topbar-bus-icon {
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, var(--lime-cream), #b8e06a);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem;
+        }
+        .topbar-logo-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            color: var(--lime-cream);
+        }
+        .topbar-sep {
+            width: 1px; height: 22px;
+            background: rgba(214,245,153,0.2);
+            margin: 0 1.1rem;
+        }
+        .topbar-context {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(214,245,153,0.5);
+        }
+        .topbar-spacer { flex: 1; }
+
+        /* ── LAYOUT ── */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 2.5rem 1rem 3rem;
+        }
+        .page-wrapper {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--dark-teal);
+            text-decoration: none;
+            padding: 0.4rem 0.9rem 0.4rem 0.65rem;
+            background: var(--white-glass);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            backdrop-filter: blur(8px);
+            transition: background var(--transition), color var(--transition),
+                        transform var(--transition), box-shadow var(--transition);
+        }
+        .back-link:hover {
+            background: var(--lime-cream);
+            color: var(--evergreen);
+            text-decoration: none;
+            transform: translateX(-2px);
+            box-shadow: 0 2px 8px rgba(0,38,38,0.10);
+        }
+        .back-arrow { transition: transform var(--transition); }
+        .back-link:hover .back-arrow { transform: translateX(-2px); }
+
+        /* ── RESULT CARD ── */
+        .result-card {
+            background: var(--white-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+        .card-rail {
+            height: 4px;
+            background: linear-gradient(90deg, var(--evergreen), var(--dark-teal), var(--cayenne-red));
+        }
+
+        /* ── CARD HEADER ── */
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 1.75rem 1.25rem;
+            border-bottom: 1px solid rgba(14,71,73,0.08);
+        }
+        .header-left {
+            display: flex; align-items: center; gap: 0.9rem;
+        }
+        .header-icon {
+            width: 42px; height: 42px;
+            background: rgba(14,71,73,0.07);
+            border: 1px solid rgba(14,71,73,0.10);
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .header-icon svg { width: 19px; height: 19px; stroke: var(--dark-teal); }
+        .header-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            color: var(--evergreen);
+            line-height: 1.2;
+        }
+        .header-subtitle {
+            font-size: 0.76rem;
+            color: rgba(14,71,73,0.52);
+            margin-top: 0.1rem;
+        }
+        .trip-id-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: var(--dark-teal);
+            background: rgba(14,71,73,0.08);
+            border: 1px solid rgba(14,71,73,0.12);
+            padding: 5px 13px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        /* ── KV ROWS ── */
+        .kv-section {
+            padding: 1.5rem 1.75rem;
+        }
+        .kv-section-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+            color: rgba(14,71,73,0.55);
+            margin-bottom: 0.85rem;
+        }
+        .kv-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .kv-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.1rem;
+            background: rgba(239,231,218,0.45);
+            border: 1px solid rgba(14,71,73,0.08);
+            border-radius: 12px;
+            transition: background var(--transition);
+        }
+        .kv-row:hover { background: rgba(214,245,153,0.20); }
+        .kv-key {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: rgba(14,71,73,0.70);
+        }
+        .kv-val {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--evergreen);
+        }
+
+        /* Seat count highlight */
+        .kv-val.highlight {
+            font-size: 1.1rem;
+            color: var(--dark-teal);
+        }
+
+        /* ── CARD FOOTER ── */
+        .card-foot {
+            padding: 0.75rem 1.75rem;
+            background: rgba(14,71,73,0.025);
+            border-top: 1px solid rgba(14,71,73,0.07);
+            font-size: 0.74rem;
+            color: rgba(14,71,73,0.45);
+        }
+
+        /* ── STATE BLOCKS ── */
+        .state-block {
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .state-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .state-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+            color: var(--evergreen);
+            margin-bottom: 0.5rem;
+        }
+        .state-body {
+            font-size: 0.85rem;
+            color: rgba(14,71,73,0.62);
+            line-height: 1.55;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+        .state-block.is-error .state-title { color: var(--cayenne-red); }
+        .state-block.is-error .state-body  { color: rgba(139,37,0,0.72); }
+
+        /* Error banner */
+        .error-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            background: rgba(229,88,18,0.07);
+            border: 1px solid rgba(229,88,18,0.22);
+            border-left: 3px solid var(--cayenne-red);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            font-size: 0.85rem;
+            color: #7a2000;
+            font-weight: 500;
+            line-height: 1.45;
+        }
+    </style>
 </head>
 <body>
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<main class="container page">
-    <div class="header">
-        <h2>Available Seats</h2>
-        <a class="link-back" th:href="@{/trip/dashboard}">← Back to dashboard</a>
-    </div>
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+    <a class="topbar-brand" th:href="@{/trip/dashboard}">
+        <div class="topbar-bus-icon">🚌</div>
+        <span class="topbar-logo-text">BusTicket</span>
+    </a>
+    <div class="topbar-sep"></div>
+    <span class="topbar-context">Trip Management</span>
+    <div class="topbar-spacer"></div>
+</header>
 
-    <div class="card result-card">
-        <p class="muted" th:if="${tripId != null}">Trip ID: <strong th:text="${tripId}">1</strong></p>
+<!-- ══ MAIN ══ -->
+<main>
+    <div class="page-wrapper">
 
-        <div class="error" th:if="${seatsError}" th:text="${seatsError}"></div>
+        <a class="back-link" th:href="@{/trip/dashboard}">
+            <span class="back-arrow">←</span>
+            Back to Dashboard
+        </a>
 
-        <div class="result" th:if="${seats != null and seatsError == null}">
-            <div class="muted" style="margin-bottom: 8px;"><b>Available Seat Details</b></div>
-            <ul class="kv">
-                <li>
-                    <strong>Trip ID:</strong>
-                    <span th:text="${seats['tripId'] != null ? seats['tripId'] : (seats['trip_id'] != null ? seats['trip_id'] : tripId)}">1</span>
-                </li>
-                <li>
-                    <strong>Available Seats:</strong>
-                    <span th:text="${seats['availableSeats'] != null ? seats['availableSeats'] : (seats['available_seats'] != null ? seats['available_seats'] : 'N/A')}">0</span>
-                </li>
-            </ul>
-            <div class="muted" th:if="${seats.isEmpty()}" style="margin-top: 10px;">No seat information found.</div>
+        <div class="result-card">
+            <div class="card-rail"></div>
+
+            <!-- CARD HEADER -->
+            <div class="card-header">
+                <div class="header-left">
+                    <div class="header-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="16" rx="3"/>
+                            <path d="M7 8h10M7 12h6"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="header-title">Seat Availability</div>
+                        <div class="header-subtitle">Current availability for the selected trip</div>
+                    </div>
+                </div>
+                <span class="trip-id-badge" th:if="${tripId != null}"
+                      th:text="'Trip #' + ${tripId}"></span>
+            </div>
+
+            <!-- STATE 1: ERROR -->
+            <div th:if="${seatsError}" class="state-block is-error">
+                <span class="state-emoji">⚠️</span>
+                <div class="state-title">Trip Not Found</div>
+                <div class="state-body" th:text="${seatsError}"></div>
+            </div>
+
+            <!-- STATE 2: RESULTS -->
+            <div th:if="${seats != null and seatsError == null}">
+                <div class="kv-section">
+                    <div class="kv-section-label">Seat Details</div>
+                    <div class="kv-list">
+                        <div class="kv-row">
+                            <span class="kv-key">Trip ID</span>
+                            <span class="kv-val"
+                                  th:text="${seats['tripId'] != null ? seats['tripId'] : (seats['trip_id'] != null ? seats['trip_id'] : tripId)}">
+                            </span>
+                        </div>
+                        <div class="kv-row">
+                            <span class="kv-key">Available Seats</span>
+                            <span class="kv-val highlight"
+                                  th:text="${seats['availableSeats'] != null ? seats['availableSeats'] : (seats['available_seats'] != null ? seats['available_seats'] : 'N/A')}">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty check -->
+                <div th:if="${seats.isEmpty()}" class="state-block">
+                    <span class="state-emoji">🔍</span>
+                    <div class="state-title">No Seat Data</div>
+                    <div class="state-body">No seat information is available for this trip.</div>
+                </div>
+
+                <div class="card-foot">
+                    Data fetched live from backend &mdash; Trip #<span th:text="${tripId}"></span>
+                </div>
+            </div>
+
         </div>
     </div>
 </main>
 
-<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

@@ -15,6 +15,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TripUiService handles operations related to trip data,
+ * including fetching available seats and searching trips.
+ *
+ * <p>
+ * This service communicates with backend APIs using {@link RestTemplate}
+ * and processes dynamic JSON responses using {@link ObjectMapper}.
+ * </p>
+ *
+ * <p>
+ * It is designed to handle flexible backend response structures
+ * by extracting relevant data nodes dynamically.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 public class TripUiService {
@@ -22,9 +36,26 @@ public class TripUiService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Base URL for backend services, injected from application properties.
+     */
     @Value("${app.backend.base-url}")
     private String backendBaseUrl;
 
+    /**
+     * Retrieves available seat information for a given trip.
+     *
+     * <p>
+     * Calls backend API and extracts relevant JSON data node,
+     * converting it into a generic map structure.
+     * </p>
+     *
+     * @param tripId the ID of the trip
+     * @return a map containing seat details
+     *
+     * @throws TripNotFoundException if the trip does not exist
+     * @throws IllegalStateException if backend response is invalid or unavailable
+     */
     public Map<String, Object> getAvailableSeats(Integer tripId) {
         String url = UriComponentsBuilder.fromHttpUrl(backendBaseUrl)
                 .path("/trips/seats")
@@ -41,6 +72,20 @@ public class TripUiService {
         return objectMapper.convertValue(data, new TypeReference<Map<String, Object>>() {});
     }
 
+    /**
+     * Searches trips based on source and destination.
+     *
+     * <p>
+     * Calls backend API and extracts trip list from flexible JSON structures.
+     * Returns an empty list if no trips are found.
+     * </p>
+     *
+     * @param source      the source location
+     * @param destination the destination location
+     * @return a list of trips represented as maps
+     *
+     * @throws IllegalStateException if backend response is invalid or unavailable
+     */
     public List<Map<String, Object>> searchTrips(String source, String destination) {
         String url = UriComponentsBuilder.fromHttpUrl(backendBaseUrl)
                 .path("/trips/search")
@@ -64,6 +109,9 @@ public class TripUiService {
         return objectMapper.convertValue(tripsArray, new TypeReference<List<Map<String, Object>>>() {});
     }
 
+    /**
+     * Executes API call to fetch seat data and handles errors.
+     */
     private String getBodyForSeats(String url, Integer tripId) {
         try {
             return restTemplate.getForObject(url, String.class);
@@ -77,6 +125,9 @@ public class TripUiService {
         }
     }
 
+    /**
+     * Executes API call to search trips and handles errors.
+     */
     private String getBodyForSearch(String url) {
         try {
             return restTemplate.getForObject(url, String.class);
@@ -90,6 +141,9 @@ public class TripUiService {
         }
     }
 
+    /**
+     * Parses JSON string into JsonNode.
+     */
     private JsonNode readJson(String body) {
         try {
             return objectMapper.readTree(body);
@@ -98,6 +152,9 @@ public class TripUiService {
         }
     }
 
+    /**
+     * Extracts common wrapper fields from JSON response.
+     */
     private JsonNode extractDataNode(JsonNode root) {
         if (root == null) {
             return null;
@@ -120,6 +177,9 @@ public class TripUiService {
         return null;
     }
 
+    /**
+     * Extracts trip array from various possible JSON structures.
+     */
     private JsonNode extractTripsArrayNode(JsonNode root) {
         if (root == null) {
             return null;

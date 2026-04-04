@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<!--
+    Page: Customer Dashboard
+    Purpose: Allows users to search customers and view their bookings
+    Data Source: Backend via Thymeleaf (customers list, bookings list)
+
+    Features:
+      - Search customers using name and address
+      - Display customer details in card format
+      - Fetch bookings using customerId
+      - Display booking details in card format
+
+    Flow:
+      - User searches customer → /customer/search → customer list displayed
+      - User enters customerId → /customer/bookings → booking list displayed
+-->
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Customer Dashboard</title>
