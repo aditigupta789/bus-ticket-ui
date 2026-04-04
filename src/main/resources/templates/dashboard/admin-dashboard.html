@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+</head>
+
+<body>
+
+<h2>Admin Dashboard</h2>
+
+<p>Welcome Admin 👑 — Select any module</p>
+
+<hr>
+
+<!-- DASHBOARD CARDS -->
+
+<div class="card-container">
+    <!-- Agency Customers -->
+    <div class="card">
+        <h3>Agency Customers</h3>
+        <p>Fetch customers by agency ID</p>
+
+        <form action="/agency/customers" method="get">
+            <button type="submit">Go</button>
+        </form>
+    </div>
+
+    <!-- Agency Office -->
+    <div class="card">
+        <h3>Agency Office Panel</h3>
+        <p>Manage office operations</p>
+        <form th:action="@{/agency-office}" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+
+    <!-- Customer Search -->
+    <div class="card">
+        <h3>Customer Search</h3>
+        <p>Search customers by name & address</p>
+        <a th:href="@{/customer}">
+            <button>Search</button>
+        </a>
+    </div>
+
+    <!-- Routes -->
+    <div class="card">
+        <h3>Routes</h3>
+        <p>Search and explore routes</p>
+        <a th:href="@{/routes}">
+            <button>Open</button>
+        </a>
+    </div>
+
+    <!-- Trips -->
+    <div class="card">
+        <h3>Trips</h3>
+        <p>View and search trips</p>
+        <a th:href="@{/trip/dashboard}">
+            <button>Open</button>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+</head>
+
+<body>
+
+<h2>Customer Dashboard</h2>
+<p>Welcome Customer 👤</p>
+
+<hr>
+
+<div class="card-container">
+
+    <!-- Customer Search -->
+    <div class="card">
+        <h3>Search Customers</h3>
+        <p>Find customers & bookings</p>
+
+        <form action="/customer" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+    <!-- Routes -->
+    <div class="card">
+        <h3>Routes</h3>
+
+        <form action="/routes" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+    <!-- Trips -->
+    <div class="card">
+        <h3>Trips</h3>
+
+        <form action="/trip/dashboard" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

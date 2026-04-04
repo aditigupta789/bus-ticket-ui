@@ -72,7 +72,7 @@ public class AuthController {
             case "AGENCY":
                 return "redirect:/agency/home";
             case "CUSTOMER":
-                return "redirect:/customer";
+                return "redirect:/customer/home";
         }
 
         return "login";

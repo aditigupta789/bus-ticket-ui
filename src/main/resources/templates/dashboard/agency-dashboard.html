@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Agency Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+</head>
+
+<body>
+
+<h2>Agency Dashboard</h2>
+<p>Welcome Agency 🚍</p>
+
+<hr>
+
+<div class="card-container">
+    <!-- Agency Customers -->
+    <div class="card">
+        <h3>Customers</h3>
+        <p>Fetch customers by agency ID</p>
+
+        <form action="/agency/customers" method="get">
+            <button type="submit">Go</button>
+        </form>
+    </div>
+
+    <!-- Agency Office -->
+    <div class="card">
+        <h3>Agency Office</h3>
+        <p>Manage office operations</p>
+
+        <form action="/agency-office" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+
+    <!-- Routes -->
+    <div class="card">
+        <h3>Routes</h3>
+        <p>Search routes</p>
+
+        <form action="/routes" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+    <!-- Trips -->
+    <div class="card">
+        <h3>Trips</h3>
+        <p>Search trips & seats</p>
+
+        <form action="/trip/dashboard" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
