@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <title>Agency Revenue</title>
+</head>
+
+<body>
+
+<h2>Agency Revenue</h2>
+
+<!-- FORM -->
+<div class="container">
+    <form action="/agency/revenue" method="get">
+        <label>Enter Agency ID:</label>
+        <input type="number" name="agencyId" placeholder="Agency ID" required>
+        <button type="submit">Get Revenue</button>
+    </form>
+</div>
+
+<hr>
+
+<!-- RESULT -->
+<div class="card-container" th:if="${revenue != null}">
+    <div class="card">
+        <h3>Total Revenue</h3>
+        <p><strong>Agency Name:</strong> <span th:text="${revenue.agencyName}"></span></p>
+        <p>
+            <strong>Amount:</strong>
+            <span th:text="${revenue.revenue}"></span>
+
+        </p>
+    </div>
+</div>
+
+<!-- ERROR -->
+<div class="error-box" th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- INITIAL STATE -->
+<p class="no-data" th:if="${revenue == null and error == null}">
+    No data loaded yet. Enter Agency ID above.
+</p>
+
+</body>
+</html>

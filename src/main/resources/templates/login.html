@@ -15,30 +15,43 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" th:href="@{/css/customers.css?v=2}">
+    <link rel="stylesheet" th:href="@{/css/login.css?v=5}">
     <title>Login</title>
 </head>
 <body>
-<h2>Login</h2>
 
-<!-- LOGIN FORM -->
-<div class="container">
-    <form action="/login" method="post">
+<div class="main-container">
 
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="Enter Username" required />
+    <!-- LEFT SIDE (FORM) -->
+    <div class="login-left">
+        <h1>Hello Again!</h1>
+        <p class="subtitle">Welcome back, please login to continue</p>
 
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter Password" required />
+        <form action="/login" method="post">
 
-        <button type="submit">Login</button>
-    </form>
+            <input type="text" name="username" placeholder="Username" required>
+
+            <input type="password" name="password" placeholder="Password" required>
+
+            <button type="submit">Sign In</button>
+
+        </form>
+
+        <!-- ERROR -->
+        <p class="error-text" th:if="${error}" th:text="${error}"></p>
+
+    </div>
+
+    <!-- RIGHT SIDE (IMAGE) -->
+    <div class="login-right">
+        <img src="/images/bus.jpg" alt="Bus Image">
+    </div>
+
 </div>
 
-<hr>
-
-<!-- ERROR MESSAGE -->
-<p class="no-data" th:if="${error}" th:text="${error}"></p>
+<footer>
+    <p>© 2026 Bus Booking System</p>
+</footer>
 
 </body>
 </html>

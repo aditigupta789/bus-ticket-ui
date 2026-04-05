@@ -1,0 +1,117 @@
+:root {
+    --bubblegum-pink: #EF476F;
+    --golden-pollen: #FFD470;
+    --antique-white: #FFEEDD;
+    --blue-green: #139FCD;
+    --midnight-violet: #1f1b33;
+    --dark-teal: #073B4C;
+}
+
+/* BODY */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(135deg, #b56a5d, #8b5e5e);
+}
+
+/* MAIN CARD */
+.main-container {
+    display: flex;
+    width: 900px;
+    height: 500px;
+
+    background: #f5f5f5;
+    border-radius: 25px;
+
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+/* LEFT SIDE */
+.login-left {
+    flex: 1;
+    padding: 50px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* TITLE */
+.login-left h1 {
+    margin-bottom: 10px;
+    color: black;
+}
+
+/* SUBTITLE */
+.subtitle {
+    margin-bottom: 30px;
+    color: #555;
+}
+
+/* INPUT */
+.login-left input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 15px;
+
+    border-radius: 10px;
+    border: none;
+
+    background: #eaeaea;
+    outline: none;
+}
+
+/* BUTTON */
+.login-left button {
+    width: 100%;
+    padding: 14px;
+
+    border-radius: 10px;
+    border: none;
+
+    background: #a26b6b;
+    color: white;
+
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+/* HOVER */
+.login-left button:hover {
+    background: #8c5a5a;
+}
+
+/* ERROR */
+.error-text {
+    margin-top: 10px;
+    color: var(--bubblegum-pink);
+}
+
+/* RIGHT SIDE */
+.login-right {
+    flex: 1;
+    position: relative;
+}
+
+/* IMAGE */
+.login-right img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+    color: #777;
+}

@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css?v=2}">
 </head>
 
 <body>
 
-<h2>Admin Dashboard</h2>
+<!-- HERO SECTION -->
+<div class="hero">
+    <img src="/images/admin-bus.jpg" alt="Dashboard Image">
 
-<p>Welcome Admin 👑 — Select any module</p>
+    <div class="overlay">
+        <h1>Welcome Admin 👑</h1>
+    </div>
+</div>
 
-<hr>
-
-<!-- DASHBOARD CARDS -->
-
+<!-- CARDS -->
 <div class="card-container">
+
     <!-- Agency Customers -->
     <div class="card">
         <h3>Agency Customers</h3>
@@ -29,18 +31,19 @@
 
     <!-- Agency Office -->
     <div class="card">
-        <h3>Agency Office Panel</h3>
+        <h3>Agency Office</h3>
         <p>Manage office operations</p>
+
         <form th:action="@{/agency-office}" method="get">
             <button type="submit">Open</button>
         </form>
     </div>
 
-
     <!-- Customer Search -->
     <div class="card">
         <h3>Customer Search</h3>
         <p>Search customers by name & address</p>
+
         <a th:href="@{/customer}">
             <button>Search</button>
         </a>
@@ -50,6 +53,7 @@
     <div class="card">
         <h3>Routes</h3>
         <p>Search and explore routes</p>
+
         <a th:href="@{/routes}">
             <button>Open</button>
         </a>
@@ -59,9 +63,37 @@
     <div class="card">
         <h3>Trips</h3>
         <p>View and search trips</p>
+
         <a th:href="@{/trip/dashboard}">
             <button>Open</button>
         </a>
+    </div>
+
+    <div class="card">
+        <h3>Trips</h3>
+        <p>Search trips & seats</p>
+
+        <form action="/trip/dashboard" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Offices</h3>
+        <p>View agency offices</p>
+
+        <form action="/agency/offices" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Revenue</h3>
+        <p>Check agency revenue</p>
+
+        <form action="/agency/revenue" method="get">
+            <button type="submit">Open</button>
+        </form>
     </div>
 
 </div>

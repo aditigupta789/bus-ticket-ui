@@ -1,5 +1,8 @@
 package com.cg.busticketui.service;
 
+import com.cg.busticketui.dto.response.AgencyOfficeResponseDto;
+import com.cg.busticketui.dto.response.AgencyRevenueDto;
+import com.cg.busticketui.dto.response.BusResponseDto;
 import com.cg.busticketui.dto.response.CustomerResponseDto;
 import com.cg.busticketui.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,6 +95,92 @@ public class AgencyService {
 
         } catch (Exception e) {
             throw new RuntimeException("Something went wrong");
+        }
+    }
+
+    public List<AgencyOfficeResponseDto> getOfficesByAgencyId(Integer agencyId, HttpSession session) {
+
+        String url = BASE_URL + "/agency/" + agencyId + "/offices";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("role", (String) session.getAttribute("role"));
+
+        if ("AGENCY".equals(session.getAttribute("role"))) {
+            headers.set("agencyId", agencyId.toString());
+        }
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<AgencyOfficeResponseDto[]> response =
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            AgencyOfficeResponseDto[].class
+                    );
+
+            return Arrays.asList(response.getBody());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching offices");
+        }
+    }
+
+    public List<BusResponseDto> getBusesByAgencyAndDate(Integer agencyId, LocalDateTime tripDate, HttpSession session) {
+
+        String url = BASE_URL + "/agency/" + agencyId + "/buses?tripDate=" + tripDate;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("role", (String) session.getAttribute("role"));
+
+        if ("AGENCY".equals(session.getAttribute("role"))) {
+            headers.set("agencyId", agencyId.toString());
+        }
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<BusResponseDto[]> response =
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            BusResponseDto[].class
+                    );
+
+            return Arrays.asList(response.getBody());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching buses");
+        }
+    }
+
+    public AgencyRevenueDto getRevenueByAgencyId(Integer agencyId, HttpSession session) {
+
+        String url = BASE_URL + "/agency/" + agencyId + "/revenue";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("role", (String) session.getAttribute("role"));
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<AgencyRevenueDto> response =
+                    restTemplate.exchange(
+                            url,
+                            HttpMethod.GET,
+                            entity,
+                            AgencyRevenueDto.class
+                    );
+
+            return response.getBody();
+
+        } catch (HttpClientErrorException.Forbidden e) {
+            throw new RuntimeException("Only ADMIN can access revenue");
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching revenue");
         }
     }
 }

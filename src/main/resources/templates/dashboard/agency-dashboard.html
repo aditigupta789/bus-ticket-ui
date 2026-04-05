@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Agency Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css?v=2}">
 </head>
 
 <body>
 
-<h2>Agency Dashboard</h2>
-<p>Welcome Agency 🚍</p>
+<!-- HERO SECTION -->
+<div class="hero">
+    <img src="/images/agency-bus-travel.jpg" alt="Dashboard Image">
 
-<hr>
+    <div class="overlay">
+        <h1>Welcome Agency 🚍</h1>
+    </div>
+</div>
 
+<!-- ACTION CARDS -->
 <div class="card-container">
-    <!-- Customer Search -->
+
     <div class="card">
         <h3>Search Customers</h3>
         <p>Find customers & bookings</p>
@@ -24,7 +28,6 @@
         </form>
     </div>
 
-    <!-- Agency Customers -->
     <div class="card">
         <h3>Customers</h3>
         <p>Fetch customers by agency ID</p>
@@ -34,7 +37,6 @@
         </form>
     </div>
 
-    <!-- Agency Office -->
     <div class="card">
         <h3>Agency Office</h3>
         <p>Manage office operations</p>
@@ -44,8 +46,6 @@
         </form>
     </div>
 
-
-    <!-- Routes -->
     <div class="card">
         <h3>Routes</h3>
         <p>Search routes</p>
@@ -55,7 +55,6 @@
         </form>
     </div>
 
-    <!-- Trips -->
     <div class="card">
         <h3>Trips</h3>
         <p>Search trips & seats</p>
@@ -65,7 +64,24 @@
         </form>
     </div>
 
+    <div class="card">
+        <h3>Offices</h3>
+        <p>View agency offices</p>
+
+        <form action="/agency/offices" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>Buses</h3>
+        <p>View buses by date</p>
+
+        <form action="/agency/buses" method="get">
+            <button type="submit">Open</button>
+        </form>
+    </div>
+
 </div>
 
 </body>
-</html>

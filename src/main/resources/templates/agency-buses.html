@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <title>Agency Buses</title>
+</head>
+
+<body>
+
+<h2>Fetch Buses</h2>
+
+<div class="container">
+    <form action="/agency/buses" method="get">
+        <input type="number" name="agencyId" placeholder="Agency ID" required>
+        <input type="datetime-local" name="tripDate" required>
+        <button type="submit">Get Buses</button>
+    </form>
+</div>
+
+<hr>
+
+<div class="card-container">
+
+    <div class="card" th:each="b : ${buses}">
+        <h3 th:text="${b.registrationNumber}"></h3>
+        <p><strong>Type:</strong> <span th:text="${b.type}"></span></p>
+        <p><strong>Capacity:</strong> <span th:text="${b.capacity}"></span></p>
+
+        <p><strong>Office:</strong>
+        <h3 th:text="${b.office.officeId}"></h3>
+        <p><strong>Mail:</strong> <span th:text="${b.office.officeMail}"></span></p>
+        <p><strong>Contact Person Name:</strong> <span th:text="${b.office.officeContactPersonName}"></span></p>
+        <p><strong>Contact Number:</strong> <span th:text="${b.office.officeContactNumber}"></span></p>
+        </p>
+    </div>
+
+</div>
+
+<p class="no-data" th:if="${buses != null and #lists.isEmpty(buses)}">
+    No buses found.
+</p>
+
+<p class="no-data" th:if="${buses == null}">
+    Enter details above.
+</p>
+</body>
+</html>

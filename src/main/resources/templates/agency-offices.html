@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/customers.css}">
+    <title>Agency Offices</title>
+</head>
+
+<body>
+
+<h2>Fetch Offices by Agency</h2>
+
+<!-- FORM -->
+<div class="container">
+    <form action="/agency/offices" method="get">
+        <label>Enter Agency ID:</label>
+        <input type="number" name="agencyId" placeholder="Enter Agency ID" required>
+        <button type="submit">Get Offices</button>
+    </form>
+</div>
+
+<hr>
+
+<!-- RESULTS -->
+<div class="card-container">
+
+    <div class="card" th:each="o : ${offices}">
+        <h3 th:text="${o.officeId}"></h3>
+        <p><strong>Mail:</strong> <span th:text="${o.officeMail}"></span></p>
+        <p><strong>Contact Person Name:</strong> <span th:text="${o.officeContactPersonName}"></span></p>
+        <p><strong>Contact Number:</strong> <span th:text="${o.officeContactNumber}"></span></p>
+    </div>
+
+</div>
+
+<!-- ERROR -->
+<div class="error-box" th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- EMPTY STATE -->
+<p class="no-data" th:if="${offices != null and #lists.isEmpty(offices)}">
+    No offices found for this agency.
+</p>
+
+<!-- INITIAL STATE -->
+<p class="no-data" th:if="${offices == null and error == null}">
+    No data loaded yet. Enter Agency ID above.
+</p>
+
+</body>
+</html>
